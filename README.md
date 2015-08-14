@@ -2,7 +2,7 @@ Data enricher
 =============
 
 [![Build Status](https://travis-ci.org/legalthings/data-enricher.svg?branch=master)](https://travis-ci.org/legalthings/data-enricher)
-[![Coverage Status](https://coveralls.io/repos/legalthings/data-enricher/badge.svg?branch=master&service=github)](https://coveralls.io/github/legalthings/data-enricher?branch=master)
+[![Coverage Status](https://coveralls.io/repos/legalthings/data-enricher/badge.svg?branch=master&service=github&)](https://coveralls.io/github/legalthings/data-enricher?branch=master)
 
 Enrich objects by processing special properties.
 
@@ -14,7 +14,6 @@ Enrich objects by processing special properties.
 * `_merge` - Merge a set of objects
 * `_tpl` - Parse text as [Mustache](https://mustache.github.io/) template
 * `_jmespath` - Project an object using the [JMESPath](http://jmespath.org/) query language
-
 
 ## Installation
 

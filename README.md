@@ -22,6 +22,8 @@ Enrich objects by processing special properties.
 
 ## Usage
 
+#### Source
+
 ```json
 {
   "foo": {
@@ -66,7 +68,10 @@ Enrich objects by processing special properties.
 }
 ```
 
+#### PHP script
+
 ```php
+$json = file_get_contents('source.json');
 $object = json_decode($json);
 
 DataEnricher::process($object);

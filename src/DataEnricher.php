@@ -12,9 +12,9 @@ class DataEnricher
      * @var array
      */
     public static $defaultProcessors = [
-        '_ref' => 'Link',
+        '_ref' => 'Reference',
         '_switch' => 'SwitchChoose',
-        '_src' => 'Source',
+        '_src' => 'Http',
         '_merge' => 'Merge',
         '_jmespath' => 'JmesPath',
         '_tpl' => 'Mustache'

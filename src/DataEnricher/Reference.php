@@ -44,13 +44,13 @@ class Reference implements Processor
         $prop = $this->property;
         
         foreach ($target as &$value) {
-            if (!is_object($value) && !is_array($value)) continue;
-            
             if (is_object($value) && isset($value->$prop)) {
                 $value = $this->source->get($value->$prop);
             }
             
-            $this->applyTo($value);
+            if (is_object($value) || is_array($value)) {
+                $this->applyTo($value);
+            }
         }
     }
 }

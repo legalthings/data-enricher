@@ -45,8 +45,11 @@ class Mustache implements Processor
         foreach ($target as &$value) {
             if (!is_object($value) && !is_array($value)) continue;
             
-            if (is_object($value) && isset($value->$prop)) $value = $this->merge($value->$prop);
-            $this->applyTo($value);
+            if (is_object($value) && isset($value->$prop)) {
+                $value = $this->parse($value->$prop);
+            } else {
+                $this->applyTo($value);
+            }
         }
     }
     

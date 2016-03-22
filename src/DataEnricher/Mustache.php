@@ -60,7 +60,7 @@ class Mustache implements Processor
      */
     protected function parse($template)
     {
-        $mustache = new Mustache_Engine();
+        $mustache = new \Mustache_Engine();
         return $mustache->render($template, $this->source);
     }
 }

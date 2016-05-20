@@ -3,6 +3,7 @@
 namespace LegalThings\DataEnricher;
 
 use LegalThings\DataEnricher as DataEnricher;
+use Mustache_Engine;
 
 /**
  * Process string as Mustache template

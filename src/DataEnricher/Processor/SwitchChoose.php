@@ -1,8 +1,10 @@
 <?php
 
-namespace LegalThings\DataEnricher;
+namespace LegalThings\DataEnricher\Processor;
 
-use LegalThings\DataEnricher as DataEnricher;
+use LegalThings\DataEnricher;
+use LegalThings\DataEnricher\Node;
+use LegalThings\DataEnricher\Processor;
 use Jasny\DotKey;
 
 /**
@@ -10,16 +12,12 @@ use Jasny\DotKey;
  */
 class SwitchChoose implements Processor
 {
+    use Processor\Implementation;
+    
     /**
      * @var DotKey
      */
     protected $source;
-    
-    /**
-     * Property key which should trigger the processor
-     * @var string
-     */
-    protected $property;
     
     /**
      * Class constructor
@@ -34,21 +32,17 @@ class SwitchChoose implements Processor
     }
     
     /**
-     * Enrich target
+     * Apply processing to a single node
      * 
-     * @param array|object $target
-     * @return array|object
+     * @param Node $node
      */
-    public function applyTo(&$target)
+    public function applyToNode($node)
     {
-        $prop = $this->property;
+        $ref = $node->getInstruction($this);
+        $cases = $node->getResult();
         
-        foreach ($target as &$value) {
-            if (!is_object($value) && !is_array($value)) continue;
-            
-            if (is_object($value) && isset($value->$prop)) $value = $this->choose($value->$prop, $value);
-            $this->applyTo($value);
-        }
+        $result = $this->choose($ref, $cases);
+        $node->setResult($result);
     }
     
     /**

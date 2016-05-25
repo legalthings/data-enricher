@@ -87,30 +87,49 @@ class DataEnricher
         foreach ($this->processors as $processor) {
             $processor->applyTo($nodes);
         }
+        
+        $this->applyNodeResults($target);
     }
 
     /**
      * Find nodes that have processing instructions
      * 
      * @param array|object $target
-     * @return array|object
+     * @return array
      */
     public function findNodes(&$target)
     {
         $nodes = [];
         
-        foreach ($target as &$value) {
+        foreach ($target as $key => &$value) {
             if (is_array($value) || (is_object($value) && !$value instanceof Node)) {
-                $this->findNodes($value);
+                $nodes = array_merge($nodes, $this->findNodes($value));
             }
             
-            if ($value instanceof stdClass && array_intersect_key((array)$value, $this->processors)) {
+            if ($value instanceof \stdClass && $this->hasProcessorProperty($value)) {
                 $value = new Node($value);
                 $nodes[] = $value;
             }
         }
         
         return $nodes;
+    }
+    
+    /**
+     * Check if object has at leas one process property
+     * 
+     * @param \stdClass $value
+     * @return boolean
+     */
+    protected function hasProcessorProperty($value)
+    {
+        $processorProps = array_map(function ($processor) {
+            return $processor->getProperty();
+        }, $this->processors);
+        
+        $valueProps = array_keys(get_object_vars($value));
+        
+        return count(array_intersect($valueProps, $processorProps)) > 0;
     }
     
     /**
@@ -121,12 +140,10 @@ class DataEnricher
     public function applyNodeResults(&$target)
     {
         foreach ($target as &$value) {
-            if (is_array($value) || (is_object($value) && !$value instanceof Node)) {
-                $this->findNodes($value);
-            }
-            
             if ($value instanceof Node) {
                 $value = $value->getResult();
+            } elseif (is_array($value) || is_object($value)) {
+                $this->applyNodeResults($value);
             }
         }
     }

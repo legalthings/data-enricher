@@ -2,7 +2,7 @@
 
 namespace LegalThings\DataEnricher;
 
-use LegalThings\DataEnricher as DataEnricher;
+use LegalThings\DataEnricher;
 
 /**
  * A processor does a single type of data enrichment

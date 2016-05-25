@@ -2,12 +2,13 @@
 
 namespace LegalThings;
 
+use LegalThings\DataEnricher;
 use LegalThings\DataEnricher\Processor;
 
 /**
- * Tests for LegalThings\DataEnrichter
+ * Tests for LegalThings\DataEnricher
  */
-class DataEnrichterTest extends \PHPUnit_Framework_TestCase
+class DataEnricherTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var object
@@ -15,7 +16,7 @@ class DataEnrichterTest extends \PHPUnit_Framework_TestCase
     protected $data;
     
     /**
-     * @var DataEnrichter
+     * @var DataEnricher
      */
     protected $enricher;
 
@@ -74,7 +75,7 @@ class DataEnrichterTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $className = 'DataEnricherConstructorTest_' . md5(uniqid());
-        eval("class $className implements " . Processor::class . " { public \$args; function __construct() { \$this->args = func_get_args(); } }");
+        eval("class $className implements " . Processor::class . " { public \$args; function __construct($this->enricher, null) { \$this->args = func_get_args(); } }");
         
         $nop = (object)[];
         

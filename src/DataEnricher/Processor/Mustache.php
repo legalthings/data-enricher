@@ -1,8 +1,10 @@
 <?php
 
-namespace LegalThings\DataEnricher;
+namespace LegalThings\DataEnricher\Processor;
 
-use LegalThings\DataEnricher as DataEnricher;
+use LegalThings\DataEnricher;
+use LegalThings\DataEnricher\Node;
+use LegalThings\DataEnricher\Processor;
 use Mustache_Engine;
 
 /**
@@ -10,16 +12,12 @@ use Mustache_Engine;
  */
 class Mustache implements Processor
 {
+    use Processor\Implementation;
+    
     /**
      * @var object
      */
     protected $source;
-    
-    /**
-     * Property key which should trigger the processor
-     * @var string
-     */
-    protected $property;
     
     /**
      * Class constructor
@@ -32,26 +30,18 @@ class Mustache implements Processor
         $this->source = $invoker->getSource();
         $this->property = $property;
     }
-    
+
     /**
-     * Enrich target
+     * Apply processing to a single node
      * 
-     * @param array|object $target
-     * @return array|object
+     * @param Node $node
      */
-    public function applyTo(&$target)
+    protected function applyToNode(Node $node)
     {
-        $prop = $this->property;
+        $template = $node->getInstruction($this);
+        $result = $this->parse($template);
         
-        foreach ($target as &$value) {
-            if (!is_object($value) && !is_array($value)) continue;
-            
-            if (is_object($value) && isset($value->$prop)) {
-                $value = $this->parse($value->$prop);
-            } else {
-                $this->applyTo($value);
-            }
-        }
+        $node->setResult($result);
     }
     
     /**
@@ -61,7 +51,7 @@ class Mustache implements Processor
      */
     protected function parse($template)
     {
-        $mustache = new \Mustache_Engine();
+        $mustache = new Mustache_Engine();
         return $mustache->render($template, $this->source);
     }
 }

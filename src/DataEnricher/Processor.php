@@ -2,7 +2,7 @@
 
 namespace LegalThings\DataEnricher;
 
-use LegalThings\DataEnricher as DataEnricher;
+use LegalThings\DataEnricher;
 
 /**
  * A processor does a single type of data enrichment
@@ -18,9 +18,16 @@ interface Processor
     public function __construct(DataEnricher $invoker, $property);
 
     /**
-     * Apply processer to target
+     * Get the property key that holds the processing instruction
      * 
-     * @param object|array $target
+     * @return string
      */
-    public function applyTo(&$target);
+    public function getProperty();
+    
+    /**
+     * Apply processing to nodes
+     * 
+     * @param Node[] $nodes
+     */
+    public function applyTo(array $nodes);
 }

@@ -20,7 +20,8 @@ class DataEnricher
         '_src' => Processor\Http::class,
         '_merge' => Processor\Merge::class,
         '_jmespath' => Processor\JmesPath::class,
-        '_tpl' => Processor\Mustache::class
+        '_tpl' => Processor\Mustache::class,
+        '_transformation' => Processor\Transform::class
     ];
     
     

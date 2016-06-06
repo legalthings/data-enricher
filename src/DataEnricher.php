@@ -15,6 +15,16 @@ class DataEnricher
      * @var array
      */
     public static $defaultProcessors = [
+        '<ifset>' => Processor\IfSet::class,
+        '<ref>' => Processor\Reference::class,
+        '<switch>' => Processor\SwitchChoose::class,
+        '<src>' => Processor\Http::class,
+        '<merge>' => Processor\Merge::class,
+        '<jmespath>' => Processor\JmesPath::class,
+        '<tpl>' => Processor\Mustache::class,
+        '<transformation>' => Processor\Transform::class,
+        
+        // Deprecated
         '_ref' => Processor\Reference::class,
         '_switch' => Processor\SwitchChoose::class,
         '_src' => Processor\Http::class,

@@ -1,12 +1,22 @@
 language: php
+sudo: false
 
 php:
-  - 5.5
   - 5.6
-  
+  - 7.0
+
+branches:
+  only:
+  - master
+
+install:
+- wget https://scrutinizer-ci.com/ocular.phar -O "$HOME/ocular.phar"
+
 before_script:
-  - composer install
+- composer install
+
+script: phpunit --coverage-clover=coverage.clover
   
 after_success:
-  - php vendor/bin/coveralls
+- php "$HOME/ocular.phar" 'code-coverage:upload' --format=php-clover coverage.clover
 

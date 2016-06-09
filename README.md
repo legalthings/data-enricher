@@ -8,12 +8,13 @@ Enrich objects by processing special properties.
 
 #### Special properties
 
-* `_ref` - Resolve a link to another part of the document using a dot key path
-* `_switch` - Choose one of the child properties based on a property in the document
-* `_src` - Load an external resource (through HTTP)
-* `_merge` - Merge a set of objects
-* `_tpl` - Parse text as [Mustache](https://mustache.github.io/) template
-* `_jmespath` - Project an object using the [JMESPath](http://jmespath.org/) query language
+* `<ref>` - Resolve a reference to another part of the document using a dot key path
+* `<ifset>` - Check a reference, it it isn't set the value will be NULL
+* `<switch>` - Choose one of the child properties based on a property in the document
+* `<src>` - Load an external resource (through HTTP)
+* `<merge>` - Merge a set of objects
+* `<tpl>` - Parse text as [Mustache](https://mustache.github.io/) template
+* `<jmespath>` - Project an object using the [JMESPath](http://jmespath.org/) query language
 
 ## Installation
 

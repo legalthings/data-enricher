@@ -36,7 +36,7 @@ class SwitchChoose implements Processor
      * 
      * @param Node $node
      */
-    public function applyToNode($node)
+    public function applyToNode(Node $node)
     {
         $ref = $node->getInstruction($this);
         $cases = $node->getResult();

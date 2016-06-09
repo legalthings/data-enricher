@@ -3,6 +3,7 @@
 namespace LegalThings\DataEnricher;
 
 use LegalThings\DataEnricher;
+use LegalThings\DataEnricher\Node;
 
 /**
  * A processor does a single type of data enrichment
@@ -25,9 +26,15 @@ interface Processor
     public function getProperty();
     
     /**
-     * Apply processing to nodes
+     * Prepare processing for nodes
      * 
      * @param Node[] $nodes
      */
-    public function applyTo(array $nodes);
+    public function prepare(array $nodes);
+    
+    /**
+     * Apply processing to a node
+     * @param Node $node
+     */
+    public function applyToNode(Node $node);
 }

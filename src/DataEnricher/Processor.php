@@ -2,7 +2,6 @@
 
 namespace LegalThings\DataEnricher;
 
-use LegalThings\DataEnricher;
 use LegalThings\DataEnricher\Node;
 
 /**
@@ -13,10 +12,9 @@ interface Processor
     /**
      * Class constructor
      * 
-     * @param DataEnricher $invoker
-     * @param string       $property  Property key which should trigger the processor
+     * @param string $property  Property key with the processing instruction
      */
-    public function __construct(DataEnricher $invoker, $property);
+    public function __construct($property);
 
     /**
      * Get the property key that holds the processing instruction
@@ -26,14 +24,8 @@ interface Processor
     public function getProperty();
     
     /**
-     * Prepare processing for nodes
-     * 
-     * @param Node[] $nodes
-     */
-    public function prepare(array $nodes);
-    
-    /**
      * Apply processing to a node
+     * 
      * @param Node $node
      */
     public function applyToNode(Node $node);

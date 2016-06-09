@@ -2,33 +2,19 @@
 
 namespace LegalThings\DataEnricher\Processor;
 
-use LegalThings\DataEnricher;
 use LegalThings\DataEnricher\Processor;
+use LegalThings\DataEnricher\Processor\Helper;
 use LegalThings\DataEnricher\Node;
-use Jasny\DotKey;
 
 /**
  * Symbolic link to a property of the source object
  */
 class Reference implements Processor
 {
-    use Processor\Implementation;
-    
-    /**
-     * @var DotKey
-     */
-    protected $source;
-    
-    /**
-     * Class constructor
-     * 
-     * @param DataEnricher $invoker
-     * @param string       $property  Property key which should trigger the processor
-     */
-    public function __construct(DataEnricher $invoker, $property)
+    use Processor\Implementation,
+        Helper\GetByReference
     {
-        $this->source = DotKey::on($invoker->getSource());
-        $this->property = $property;
+        Helper\GetByReference::withSourceAndTarget insteadof Processor\Implementation;
     }
     
     /**
@@ -40,7 +26,7 @@ class Reference implements Processor
     {
         $ref = $node->getInstruction($this);
         
-        $result = $this->source->get($ref);
+        $result = $this->getByReference($ref, $this->source, $this->target);
         $node->setResult($result);
     }
 }

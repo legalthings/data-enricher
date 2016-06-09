@@ -4,6 +4,7 @@ namespace LegalThings;
 
 use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
+use Jasny\DotKey;
 
 /**
  * Enrich objects by processing special properties.
@@ -18,10 +19,10 @@ class DataEnricher
         '<ifset>' => Processor\IfSet::class,
         '<ref>' => Processor\Reference::class,
         '<switch>' => Processor\SwitchChoose::class,
-        '<src>' => Processor\Http::class,
         '<merge>' => Processor\Merge::class,
-        '<jmespath>' => Processor\JmesPath::class,
         '<tpl>' => Processor\Mustache::class,
+        '<src>' => Processor\Http::class,
+        '<jmespath>' => Processor\JmesPath::class,
         '<transformation>' => Processor\Transform::class,
         
         // Deprecated
@@ -36,11 +37,6 @@ class DataEnricher
     
     
     /**
-     * @var object
-     */
-    protected $source;
-    
-    /**
      * Processors, applied in specified order.
      * 
      * @var DataEnricher\Processor[]
@@ -50,21 +46,12 @@ class DataEnricher
     
     /**
      * Class constructor
-     * 
-     * @param object $source  Data source
      */
-    public function __construct($source)
+    public function __construct()
     {
-        if (!is_object($source)) {
-            throw new \Exception("Data enricher on works on an object, not on a " . gettype($source));
-        }
-        
-        $this->source = $source;
-        
         foreach (static::$defaultProcessors as $property => $processor) {
             if (is_string($processor)) {
-                $class = $processor;
-                $processor = new $class($this, $property);
+                $processor = new $processor($property);
             }
             
             $this->processors[] = $processor;
@@ -72,13 +59,21 @@ class DataEnricher
     }
     
     /**
-     * Get the source object
+     * Create processors
      * 
-     * @return object
+     * @param object       $source  Data source
+     * @param array|object $target  Target or dot key path
+     * @return Processor[]
      */
-    public function getSource()
+    protected function getProcessorsFor($source, $target)
     {
-        return $this->source;
+        $processors = [];
+        
+        foreach ($this->processors as $processor) {
+            $processors[] = $processor->withSourceAndTarget($source, $target);
+        }
+        
+        return $processors;
     }
     
     
@@ -86,38 +81,32 @@ class DataEnricher
      * Apply processing instructions
      * 
      * @param array|object|string $target  Target or dot key path
+     * @param object              $source  Data source
      */
-    public function applyTo($target)
+    public function applyTo($target, $source = null)
     {
+        if (!isset($source)) {
+            $source = $target;
+        }
+        
+        if (!is_object($source)) {
+            throw new \Exception("Data enricher on works on an object, not on a " . gettype($source));
+        }
+        
         if (is_string($target)) {
-            $target = \DotKey::on($this->source)->get($target);
+            $target = DotKey::on($source)->get($target);
         }
         
         $nodes = $this->findNodes($target);
-
-        foreach ($this->processors as $processor) {
-            $processor->prepare($nodes);
-        }
+        $processors = $this->getProcessorsFor($source, $target);
         
         foreach ($nodes as $node) {
-            $this->applyToNode($node);
+            foreach ($processors as $processor) {
+                $node->apply($processor);
+            }
         }
         
         $this->applyNodeResults($target);
-    }
-    
-    /**
-     * Apply processing instructions to node
-     * 
-     * @param Node $node
-     */
-    protected function applyToNode(Node $node)
-    {
-        foreach ($this->processors as $processor) {
-            if ($node->hasInstruction($processor)) {
-                $processor->applyToNode($node);
-            }
-        }
     }
 
     /**
@@ -147,7 +136,8 @@ class DataEnricher
     /**
      * Check if object has at leas one process property
      * 
-     * @param \stdClass $value
+     * @param \stdClass    $value
+     * @param Processor[]  $processors
      * @return boolean
      */
     protected function hasProcessorProperty($value)
@@ -157,7 +147,6 @@ class DataEnricher
         }, $this->processors);
         
         $valueProps = array_keys(get_object_vars($value));
-        
         return count(array_intersect($valueProps, $processorProps)) > 0;
     }
     
@@ -175,16 +164,5 @@ class DataEnricher
                 $this->applyNodeResults($value);
             }
         }
-    }
-    
-    /**
-     * Enrich object
-     * 
-     * @param object $subject
-     */
-    public static function process($subject)
-    {
-        $enrich = new static($subject);
-        $enrich->applyTo($subject);
     }
 }

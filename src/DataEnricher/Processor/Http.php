@@ -2,11 +2,9 @@
 
 namespace LegalThings\DataEnricher\Processor;
 
-use LegalThings\DataEnricher;
 use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
 use GuzzleHttp\Client;
-use GuzzleHttp\Promise;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -14,88 +12,61 @@ use GuzzleHttp\Psr7\Response;
  */
 class Http implements Processor
 {
-    /**
-     * Property key which should trigger the processor
-     * @var string
-     */
-    protected $property;
+    use Processor\Implementation;
     
     /**
-     * @var \SplObjectStorage|Promise\PromiseInterface[]
-     */
-    protected $promises;
-    
-    /**
-     * Class constructor
+     * Get the URL from a node
      * 
-     * @param DataEnricher $invoker
-     * @param string       $property  Property key with the processing instruction
-     */
-    public function __construct(DataEnricher $invoker, $property)
-    {
-        $this->property = $property;
-    }
-    
-    /**
-     * Get the property key that holds the processing instruction
-     * 
+     * @param Node $node
      * @return string
      */
-    public function getProperty()
+    protected function getUrl($node)
     {
-        return $this->property;
-    }
-    
-    /**
-     * Prepare processing to nodes
-     * 
-     * @param Node[] $nodes
-     */
-    public function prepare(array $nodes)
-    {
-        $this->promises = $this->request($nodes);
-    }
-    
-    /**
-     * Do async requests for each node
-     * 
-     * @param Node[] $nodes
-     * @return \SplObjectStorage|Promise\PromiseInterface[]
-     */
-    protected function request($nodes)
-    {
-        $client = new Client();
-        $promises = new \SplObjectStorage();
+        $url = $node->getInstruction($this);
         
-        foreach ($nodes as $node) {
-            if ($node->hasInstruction($this)) {
-                $url = $node->getInstruction($this);
-                $promises[$node] = $client->getAsync($url);
-            }
+        $type = (is_object($url) ? get_class($url) . ' ' : '') . gettype($url);
+        if (!assert(is_string($url), "Expected '{$this->property}' to be a string, but got a $type")) {
+            return null;
         }
         
-        return $promises;
-    }        
+        return $url;
+    }
     
     /**
-     * Apply results to a node
+     * Do async request for node
      * 
      * @param Node $node
      */
     public function applyToNode(Node $node)
     {
-        if (!isset($this->promises[$node])) {
+        $url = $this->getUrl($node);
+        if (!isset($url)) {
             return;
         }
-        
-        $result = null;
-        $response = $this->promises[$node]->wait();
 
-        if ($this->hasExpectedResponse($response)) {
-            $result = json_decode($response->body());
+        $client = new Client(['http_errors' => false]);
+        $promise = $client->getAsync($url)->then(function (Response $response) use ($node) {
+            $this->applyResult($node, $response);
+        });
+        
+        $node->setResult($promise);
+    }
+    
+    /**
+     * Apply results to a node
+     * 
+     * @param Node     $node
+     * @param Response $response
+     */
+    protected function applyResult(Node $node, Response $response)
+    {
+        $result = null;
+
+        if ($this->hasExpectedResponse($node, $response)) {
+            $result = json_decode($response->getBody());
 
             if (!$result) {
-                $url = $node->getInstruction($this);
+                $url = $this->getUrl($node);
                 trigger_error("Failed to fetch '$url': Corrupt JSON response", E_USER_WARNING);
             }
         }
@@ -106,16 +77,17 @@ class Http implements Processor
     /**
      * Check if we got an expected response
      * 
+     * @param Node     $node
      * @param Response $response
      * @return boolean
      */
-    protected function hasExpectedResponse(Response $response)
+    protected function hasExpectedResponse(Node $node, Response $response)
     {
         $status = $response->getStatusCode();
-        $contentType = preg_replace('/\s*;.*$/', '', $response->getHeader('content-type'));
+        $contentType = preg_replace('/\s*;.*$/', '', $response->getHeaderLine('Content-Type'));
         
         if ($status >= 300 || !in_array($contentType, ['application/json', 'text/plain'])) {
-            $url = $node->getInstruction($this);
+            $url = $this->getUrl($node);
             
             if ($contentType === 'text/plain') {
                 $message = $response->getBody();

@@ -3,6 +3,7 @@
 namespace LegalThings\DataEnricher;
 
 use LegalThings\DataEnricher\Processor;
+use GuzzleHttp\Promise\PromiseInterface;
 
 /**
  * An object with processing instructions
@@ -40,6 +41,10 @@ class Node extends \stdClass
      */
     public function getResult()
     {
+        if ($this->i_result instanceof PromiseInterface) {
+            return $this->i_result->wait();
+        }
+        
         return $this->i_result;
     }
     
@@ -87,5 +92,25 @@ class Node extends \stdClass
         }
         
         return $value;
+    }
+    
+    /**
+     * Apply processing to this node
+     * 
+     * @param Processor $processor
+     */
+    public function apply(Processor $processor)
+    {
+        if (!$this->hasInstruction($processor)) {
+            return;
+        }
+        
+        if ($this->i_result instanceof PromiseInterface) {
+            $this->i_result->then(function() use ($processor) {
+                $processor->applyToNode($this);
+            });
+        } else {
+            $processor->applyToNode($this);
+        }
     }
 }

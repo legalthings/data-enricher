@@ -2,7 +2,6 @@
 
 namespace LegalThings\DataEnricher\Processor;
 
-use LegalThings\DataEnricher;
 use LegalThings\DataEnricher\Node;
 
 /**
@@ -27,12 +26,22 @@ trait Implementation
     /**
      * Class constructor
      * 
-     * @param DataEnricher $invoker
-     * @param string       $property  Property key with the processing instruction
+     * @param string $property  Property key with the processing instruction
      */
-    public function __construct(DataEnricher $invoker, $property)
+    public function __construct($property)
     {
         $this->property = $property;
+    }
+    
+    /**
+     * Doesn't apply, simply return processor
+     * 
+     * @param object       $source  Data source
+     * @param array|object $target  Target or dot key path
+     */
+    public function withSourceAndTarget($source, $target)
+    {
+        return $this;
     }
     
     /**
@@ -43,15 +52,5 @@ trait Implementation
     public function getProperty()
     {
         return $this->property;
-    }
-    
-    /**
-     * Apply reference processing
-     * 
-     * @param Node[] $nodes
-     */
-    public function prepare(array $nodes)
-    {
-        // Does nothing
     }
 }

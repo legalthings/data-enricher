@@ -2,7 +2,8 @@ Data enricher
 =============
 
 [![Build Status](https://travis-ci.org/legalthings/data-enricher.svg?branch=master)](https://travis-ci.org/legalthings/data-enricher)
-[![Coverage Status](https://coveralls.io/repos/legalthings/data-enricher/badge.svg?branch=master&service=github&)](https://coveralls.io/github/legalthings/data-enricher?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/legalthings/data-enricher/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/legalthings/data-enricher/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/legalthings/data-enricher/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/legalthings/data-enricher/?branch=master)
 
 Enrich objects by processing special properties.
 
@@ -43,30 +44,30 @@ Enrich objects by processing special properties.
     "country": "Netherlands"
   },
   "amount": {
-    "_ref" : "foo.bar.qux"
+    "<ref>" : "foo.bar.qux"
   },
   "message": {
-    "_tpl": "I want to go to {{ foo.city }}, {{ foo.country }}"
+    "<tpl>": "I want to go to {{ foo.city }}, {{ foo.country }}"
   },
   "shipping": {
-    "_switch": "foo.city",
+    "<switch>": "foo.city",
     "USA": "UPS",
     "Netherlands": "PostNL",
     "_other": "DHL"
   },
   "user" : {
-    "_src": "https://api.example.com/users/9870"
+    "<src>": "https://api.example.com/users/9870"
   },
   "search_results": {
-    "_src": {
-      "_tpl": "http://api.duckduckgo.com/?q={{ foo.term }}&format=json"
+    "<src>": {
+      "<tpl>": "http://api.duckduckgo.com/?q={{ foo.term }}&format=json"
     },
-    "_jmespath": "RelatedTopics[].{url: FirstURL, description: Text}"
+    "<jmespath>": "RelatedTopics[].{url: FirstURL, description: Text}"
   },
   "profile": {
-    "_merge": [
-      { "_ref": "foo.bar" },
-      { "_src": "https://api.example.com/zoo/99" },
+    "<merge>": [
+      { "<ref>": "foo.bar" },
+      { "<src>": "https://api.example.com/zoo/99" },
       {
         "apples": 100,
         "pears": 220
@@ -82,7 +83,8 @@ Enrich objects by processing special properties.
 $json = file_get_contents('source.json');
 $object = json_decode($json);
 
-DataEnricher::process($object);
+$enricher = new DataEnricher();
+$enricher->applyTo($object);
 
 echo json_encode($object, JSON_PRETTY_PRINT);
 ```

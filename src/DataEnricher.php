@@ -18,10 +18,10 @@ class DataEnricher
         '<ifset>' => Processor\IfSet::class,
         '<ref>' => Processor\Reference::class,
         '<switch>' => Processor\SwitchChoose::class,
-        '<src>' => Processor\Http::class,
         '<merge>' => Processor\Merge::class,
-        '<jmespath>' => Processor\JmesPath::class,
         '<tpl>' => Processor\Mustache::class,
+        '<src>' => Processor\Http::class,
+        '<jmespath>' => Processor\JmesPath::class,
         '<transformation>' => Processor\Transform::class,
         
         // Deprecated
@@ -94,30 +94,14 @@ class DataEnricher
         }
         
         $nodes = $this->findNodes($target);
-
-        foreach ($this->processors as $processor) {
-            $processor->prepare($nodes);
-        }
         
         foreach ($nodes as $node) {
-            $this->applyToNode($node);
+            foreach ($this->processors as $processor) {
+                $node->apply($processor);
+            }
         }
         
         $this->applyNodeResults($target);
-    }
-    
-    /**
-     * Apply processing instructions to node
-     * 
-     * @param Node $node
-     */
-    protected function applyToNode(Node $node)
-    {
-        foreach ($this->processors as $processor) {
-            if ($node->hasInstruction($processor)) {
-                $processor->applyToNode($node);
-            }
-        }
     }
 
     /**

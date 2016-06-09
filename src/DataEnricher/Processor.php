@@ -26,13 +26,6 @@ interface Processor
     public function getProperty();
     
     /**
-     * Prepare processing for nodes
-     * 
-     * @param Node[] $nodes
-     */
-    public function prepare(array $nodes);
-    
-    /**
      * Apply processing to a node
      * @param Node $node
      */

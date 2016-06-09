@@ -46,56 +46,60 @@ class Http implements Processor
         return $this->property;
     }
     
+    
     /**
-     * Prepare processing to nodes
+     * Get the URL from a node
      * 
-     * @param Node[] $nodes
+     * @param Node $node
+     * @return string
      */
-    public function prepare(array $nodes)
+    protected function getUrl($node)
     {
-        $this->promises = $this->request($nodes);
+        $url = $node->getInstruction($this);
+        
+        $type = (is_object($url) ? get_class($url) . ' ' : '') . gettype($url);
+        if (!assert(is_string($url), "Expected '{$this->property}' to be a string, but got a $type")) {
+            return null;
+        }
+        
+        return $url;
     }
     
     /**
-     * Do async requests for each node
-     * 
-     * @param Node[] $nodes
-     * @return \SplObjectStorage|Promise\PromiseInterface[]
-     */
-    protected function request($nodes)
-    {
-        $client = new Client();
-        $promises = new \SplObjectStorage();
-        
-        foreach ($nodes as $node) {
-            if ($node->hasInstruction($this)) {
-                $url = $node->getInstruction($this);
-                $promises[$node] = $client->getAsync($url);
-            }
-        }
-        
-        return $promises;
-    }        
-    
-    /**
-     * Apply results to a node
+     * Do async request for node
      * 
      * @param Node $node
      */
     public function applyToNode(Node $node)
     {
-        if (!isset($this->promises[$node])) {
+        $url = $this->getUrl($node);
+        if (!isset($url)) {
             return;
         }
-        
-        $result = null;
-        $response = $this->promises[$node]->wait();
 
-        if ($this->hasExpectedResponse($response)) {
-            $result = json_decode($response->body());
+        $client = new Client(['http_errors' => false]);
+        $promise = $client->getAsync($url)->then(function (Response $response) use ($node) {
+            $this->applyResult($node, $response);
+        });
+        
+        $node->setResult($promise);
+    }
+    
+    /**
+     * Apply results to a node
+     * 
+     * @param Node     $node
+     * @param Response $response
+     */
+    protected function applyResult(Node $node, Response $response)
+    {
+        $result = null;
+
+        if ($this->hasExpectedResponse($node, $response)) {
+            $result = json_decode($response->getBody());
 
             if (!$result) {
-                $url = $node->getInstruction($this);
+                $url = $this->getUrl($node);
                 trigger_error("Failed to fetch '$url': Corrupt JSON response", E_USER_WARNING);
             }
         }
@@ -106,16 +110,17 @@ class Http implements Processor
     /**
      * Check if we got an expected response
      * 
+     * @param Node     $node
      * @param Response $response
      * @return boolean
      */
-    protected function hasExpectedResponse(Response $response)
+    protected function hasExpectedResponse(Node $node, Response $response)
     {
         $status = $response->getStatusCode();
-        $contentType = preg_replace('/\s*;.*$/', '', $response->getHeader('content-type'));
+        $contentType = preg_replace('/\s*;.*$/', '', $response->getHeaderLine('Content-Type'));
         
         if ($status >= 300 || !in_array($contentType, ['application/json', 'text/plain'])) {
-            $url = $node->getInstruction($this);
+            $url = $this->getUrl($node);
             
             if ($contentType === 'text/plain') {
                 $message = $response->getBody();

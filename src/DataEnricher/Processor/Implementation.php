@@ -44,14 +44,4 @@ trait Implementation
     {
         return $this->property;
     }
-    
-    /**
-     * Apply reference processing
-     * 
-     * @param Node[] $nodes
-     */
-    public function prepare(array $nodes)
-    {
-        // Does nothing
-    }
 }

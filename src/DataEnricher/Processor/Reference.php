@@ -36,7 +36,7 @@ class Reference implements Processor
      * 
      * @param Node $node
      */
-    protected function applyToNode(Node $node)
+    public function applyToNode(Node $node)
     {
         $ref = $node->getInstruction($this);
         

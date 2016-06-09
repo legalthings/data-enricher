@@ -22,7 +22,7 @@ trait Implementation
      * @param Node $node
      * @return void
      */
-    abstract protected function applyToNode(Node $node);
+    abstract public function applyToNode(Node $node);
     
     /**
      * Class constructor
@@ -50,12 +50,8 @@ trait Implementation
      * 
      * @param Node[] $nodes
      */
-    public function applyTo(array $nodes)
+    public function prepare(array $nodes)
     {
-        foreach ($nodes as $node) {
-            if ($node->hasInstruction($this)) {
-                $this->applyToNode($node);
-            }
-        }
+        // Does nothing
     }
 }

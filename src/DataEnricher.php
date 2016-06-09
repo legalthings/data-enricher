@@ -94,9 +94,17 @@ class DataEnricher
         }
         
         $nodes = $this->findNodes($target);
-        
+
         foreach ($this->processors as $processor) {
-            $processor->applyTo($nodes);
+            $processor->prepare($nodes);
+        }
+        
+        foreach ($nodes as $node) {
+            foreach ($this->processors as $processor) {
+                if ($node->hasInstruction($processor)) {
+                    $processor->applyToNode($node);
+                }
+            }
         }
         
         $this->applyNodeResults($target);

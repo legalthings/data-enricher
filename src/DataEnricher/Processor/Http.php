@@ -21,6 +21,11 @@ class Http implements Processor
     protected $property;
     
     /**
+     * @var \SplObjectStorage|Promise\PromiseInterface[]
+     */
+    protected $promises;
+    
+    /**
      * Class constructor
      * 
      * @param DataEnricher $invoker
@@ -42,18 +47,13 @@ class Http implements Processor
     }
     
     /**
-     * Apply processing to nodes
+     * Prepare processing to nodes
      * 
      * @param Node[] $nodes
      */
-    public function applyTo(array $nodes)
+    public function prepare(array $nodes)
     {
-        $promises = $this->request($nodes);
-        if (empty($promises)) {
-            return;
-        }
-        
-        $this->applyResults($promises);
+        $this->promises = $this->request($nodes);
     }
     
     /**
@@ -78,31 +78,29 @@ class Http implements Processor
     }        
     
     /**
-     * Apply results to nodes
+     * Apply results to a node
      * 
-     * @param \SplObjectStorage|Promise\PromiseInterface[] $promises
+     * @param Node $node
      */
-    protected function applyResults($promises)
+    public function applyToNode(Node $node)
     {
-        $results = new \SplObjectStorage();
-        foreach ($promises as $node => $promise) {
-            $results[$node] = $promise->wait();
+        if (!isset($this->promises[$node])) {
+            return;
+        }
+        
+        $result = null;
+        $response = $this->promises[$node]->wait();
+
+        if ($this->hasExpectedResponse($response)) {
+            $result = json_decode($response->body());
+
+            if (!$result) {
+                $url = $node->getInstruction($this);
+                trigger_error("Failed to fetch '$url': Corrupt JSON response", E_USER_WARNING);
+            }
         }
 
-        foreach ($results as $node => $response) {
-            $result = null;
-            
-            if ($this->hasExpectedResponse($response)) {
-                $result = json_decode($response->body());
-                
-                if (!$result) {
-                    $url = $node->getInstruction($this);
-                    trigger_error("Failed to fetch '$url': Corrupt JSON response", E_USER_WARNING);
-                }
-            }
-            
-            $node->setResult($result);
-        }
+        $node->setResult($result);
     }
     
     /**

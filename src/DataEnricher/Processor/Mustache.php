@@ -36,7 +36,7 @@ class Mustache implements Processor
      * 
      * @param Node $node
      */
-    protected function applyToNode(Node $node)
+    public function applyToNode(Node $node)
     {
         $template = $node->getInstruction($this);
         $result = $this->parse($template);

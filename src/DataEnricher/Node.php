@@ -80,6 +80,12 @@ class Node extends \stdClass
             throw new \LogicException("Node doesn't have instruction property '$prop'");
         }
         
-        return $this->$prop;
+        $value = $this->$prop;
+        
+        if ($value instanceof self) {
+            $value = $value->getResult();
+        }
+        
+        return $value;
     }
 }

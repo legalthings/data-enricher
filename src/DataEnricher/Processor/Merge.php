@@ -17,7 +17,7 @@ class Merge implements Processor
      * 
      * @param Node $node
      */
-    public function applyToNode($node)
+    public function applyToNode(Node $node)
     {
         $list = $node->getInstruction($this);
         

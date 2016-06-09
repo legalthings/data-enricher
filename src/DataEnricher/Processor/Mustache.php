@@ -2,9 +2,9 @@
 
 namespace LegalThings\DataEnricher\Processor;
 
-use LegalThings\DataEnricher;
 use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
+use LegalThings\DataEnricher\Processor\Helper;
 use Mustache_Engine;
 
 /**
@@ -12,23 +12,10 @@ use Mustache_Engine;
  */
 class Mustache implements Processor
 {
-    use Processor\Implementation;
-    
-    /**
-     * @var object
-     */
-    protected $source;
-    
-    /**
-     * Class constructor
-     * 
-     * @param DataEnricher $invoker
-     * @param string       $property  Property key which should trigger the processor
-     */
-    public function __construct(DataEnricher $invoker, $property)
+    use Processor\Implementation,
+        Helper\GetByReference
     {
-        $this->source = $invoker->getSource();
-        $this->property = $property;
+        Helper\GetByReference::withSourceAndTarget insteadof Processor\Implementation;
     }
 
     /**
@@ -51,7 +38,9 @@ class Mustache implements Processor
      */
     protected function parse($template)
     {
+        $data = get_object_vars($this->source) + ['@' => $this->target];
+        
         $mustache = new Mustache_Engine();
-        return $mustache->render($template, $this->source);
+        return $mustache->render($template, $data);
     }
 }

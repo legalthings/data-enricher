@@ -2,33 +2,19 @@
 
 namespace LegalThings\DataEnricher\Processor;
 
-use LegalThings\DataEnricher;
 use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
-use Jasny\DotKey;
+use LegalThings\DataEnricher\Processor\Helper;
 
 /**
  * Choose one of the child properties based on a property in the document
  */
 class SwitchChoose implements Processor
 {
-    use Processor\Implementation;
-    
-    /**
-     * @var DotKey
-     */
-    protected $source;
-    
-    /**
-     * Class constructor
-     * 
-     * @param DataEnricher $invoker
-     * @param string       $property  Property key which should trigger the processor
-     */
-    public function __construct(DataEnricher $invoker, $property)
+    use Processor\Implementation,
+        Helper\GetByReference
     {
-        $this->source = DotKey::on($invoker->getSource());
-        $this->property = $property;
+        Helper\GetByReference::withSourceAndTarget insteadof Processor\Implementation;
     }
     
     /**
@@ -50,11 +36,11 @@ class SwitchChoose implements Processor
      * 
      * @param string $ref    Property name of source
      * @param object $cases
-     * @return type
+     * @return mixed
      */
     protected function choose($ref, $cases)
     {
-        $test = $this->source->get($ref);
+        $test = $this->getByReference($ref, $this->source, $this->target);
         return isset($cases->$test) ? $cases->$test : null;
     }
 }

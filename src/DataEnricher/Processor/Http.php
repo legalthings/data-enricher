@@ -2,11 +2,9 @@
 
 namespace LegalThings\DataEnricher\Processor;
 
-use LegalThings\DataEnricher;
 use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
 use GuzzleHttp\Client;
-use GuzzleHttp\Promise;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -14,38 +12,7 @@ use GuzzleHttp\Psr7\Response;
  */
 class Http implements Processor
 {
-    /**
-     * Property key which should trigger the processor
-     * @var string
-     */
-    protected $property;
-    
-    /**
-     * @var \SplObjectStorage|Promise\PromiseInterface[]
-     */
-    protected $promises;
-    
-    /**
-     * Class constructor
-     * 
-     * @param DataEnricher $invoker
-     * @param string       $property  Property key with the processing instruction
-     */
-    public function __construct(DataEnricher $invoker, $property)
-    {
-        $this->property = $property;
-    }
-    
-    /**
-     * Get the property key that holds the processing instruction
-     * 
-     * @return string
-     */
-    public function getProperty()
-    {
-        return $this->property;
-    }
-    
+    use Processor\Implementation;
     
     /**
      * Get the URL from a node

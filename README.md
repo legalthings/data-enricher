@@ -9,11 +9,19 @@ Enrich objects by processing special properties.
 #### Special properties
 
 * `<ref>` - Resolve a reference to another part of the document using a dot key path
-* `<ifset>` - Check a reference, it it isn't set the value will be NULL
+* `<ifset>` - Checks if a reference is null. If so, replace the object by null.
 * `<switch>` - Choose one of the child properties based on a property in the document
 * `<src>` - Load an external resource (through HTTP)
 * `<merge>` - Merge a set of objects
 * `<tpl>` - Parse text as [Mustache](https://mustache.github.io/) template
+* `<transform>` - Transform the input using a function. The following functions are available
+  * [`hash:algo`](http://php.net/hash) - Replace `algo` with the algoritm
+  * [`base64_encode`](http://php.net/base64_encode)
+  * [`base64_decode`](http://php.net/base64_decode)
+  * [`json_encode`](http://php.net/json_encode)
+  * [`json_decode`](http://php.net/json_decode)
+  * [`serialize`](http://php.net/serialize)
+  * [`unserialize`](http://php.net/unserialize)
 * `<jmespath>` - Project an object using the [JMESPath](http://jmespath.org/) query language
 
 ## Installation

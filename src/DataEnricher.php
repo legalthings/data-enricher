@@ -83,7 +83,7 @@ class DataEnricher
     
     
     /**
-     * Invoke enricher 
+     * Apply processing instructions
      * 
      * @param array|object|string $target  Target or dot key path
      */
@@ -100,14 +100,24 @@ class DataEnricher
         }
         
         foreach ($nodes as $node) {
-            foreach ($this->processors as $processor) {
-                if ($node->hasInstruction($processor)) {
-                    $processor->applyToNode($node);
-                }
-            }
+            $this->applyToNode($node);
         }
         
         $this->applyNodeResults($target);
+    }
+    
+    /**
+     * Apply processing instructions to node
+     * 
+     * @param Node $node
+     */
+    protected function applyToNode(Node $node)
+    {
+        foreach ($this->processors as $processor) {
+            if ($node->hasInstruction($processor)) {
+                $processor->applyToNode($node);
+            }
+        }
     }
 
     /**

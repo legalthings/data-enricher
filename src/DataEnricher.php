@@ -155,7 +155,7 @@ class DataEnricher
      * 
      * @param array|object $target
      */
-    public function applyNodeResults(&$target)
+    protected function applyNodeResults(&$target)
     {
         foreach ($target as &$value) {
             if ($value instanceof Node) {

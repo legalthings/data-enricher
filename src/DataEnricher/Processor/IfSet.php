@@ -35,7 +35,7 @@ class IfSet implements Processor
             }
         } else {
             $result = $node->getResult();
-            $result->{$this->property} = null;
+            unset($result->{$this->property});
             
             $node->setResult($result);
         }

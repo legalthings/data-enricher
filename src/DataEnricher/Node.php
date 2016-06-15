@@ -33,6 +33,27 @@ class Node extends \stdClass
             $this->$key = $value;
         }
     }
+
+    
+    /**
+     * Replace nodes with their results
+     * 
+     * @param array|object $target
+     */
+    protected function applyNodeResults(&$target)
+    {
+        if (!is_array($target) && !is_object($target)) {
+            return;
+        }
+        
+        foreach ($target as &$value) {
+            if ($value instanceof self) {
+                $value = $value->getResult();
+            }
+            
+            $this->applyNodeResults($value);
+        }
+    }
     
     /**
      * Get the processed result
@@ -42,10 +63,13 @@ class Node extends \stdClass
     public function getResult()
     {
         if ($this->i_result instanceof PromiseInterface) {
-            return $this->i_result->wait();
+            $result = $this->i_result->wait();
+        } else {
+            $result = $this->i_result;
         }
         
-        return $this->i_result;
+        $this->applyNodeResults($result);
+        return $result;
     }
     
     /**

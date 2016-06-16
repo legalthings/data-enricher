@@ -24,7 +24,7 @@ class JmesPathTest extends \PHPUnit_Framework_TestCase
         $data->qux = 22;
         
         $node->expects($this->atLeastOnce())
-            ->method('getProcessingInstruction')
+            ->method('getInstruction')
             ->with($processor)
             ->willReturn('{foo: foo, title: bar}');
         
@@ -34,7 +34,7 @@ class JmesPathTest extends \PHPUnit_Framework_TestCase
         
         $node->expects($this->atLeastOnce())
             ->method('setResult')
-            ->with((object)['foo' => 'ref', 'title' => 'Sir']);
+            ->with((object)['foo' => 'red', 'title' => 'Sir']);
         
         $processor->applyToNode($node);
     }

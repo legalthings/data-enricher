@@ -42,16 +42,13 @@ class Node extends \stdClass
      */
     protected function applyNodeResults(&$target)
     {
-        if (!is_array($target) && !is_object($target)) {
-            return;
-        }
-        
-        foreach ($target as &$value) {
-            if ($value instanceof self) {
-                $value = $value->getResult();
+        if ($target instanceof self) {
+            $target = $target->getResult();
+            $this->applyNodeResults($target);
+        } elseif (is_array($target) || is_object($target)) {
+            foreach ($target as &$value) {         
+                $this->applyNodeResults($value);
             }
-            
-            $this->applyNodeResults($value);
         }
     }
     

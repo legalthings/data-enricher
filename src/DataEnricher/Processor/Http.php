@@ -61,7 +61,7 @@ class Http implements Processor
     protected function applyResult(Node $node, Response $response)
     {
         $result = null;
-
+        
         if ($this->hasExpectedResponse($node, $response)) {
             $result = json_decode($response->getBody());
 
@@ -85,8 +85,10 @@ class Http implements Processor
     {
         $status = $response->getStatusCode();
         $contentType = preg_replace('/\s*;.*$/', '', $response->getHeaderLine('Content-Type'));
-        
-        if ($status >= 300 || !in_array($contentType, ['application/json', 'text/plain'])) {
+
+        if ($status == 404) {
+            return false;
+        } elseif ($status >= 300 || !in_array($contentType, ['application/json', 'text/plain'])) {
             $url = $this->getUrl($node);
             
             if ($contentType === 'text/plain') {

@@ -63,10 +63,14 @@ class Node extends \stdClass
     public function getResult()
     {
         if ($this->i_result instanceof PromiseInterface) {
-            $result = $this->i_result->wait();
-        } else {
-            $result = $this->i_result;
+            $this->i_result->wait();
+            
+            if ($this->i_result instanceof PromiseInterface) {
+                throw new \LogicException("Promise result not replaced with data");
+            }
         }
+
+        $result = $this->i_result;
         
         $this->applyNodeResults($result);
         return $result;

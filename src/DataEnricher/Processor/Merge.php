@@ -32,14 +32,14 @@ class Merge implements Processor
      */
     protected function merge($merge)
     {
-        $value = (object)[];
+        $result = (object)[];
         
         foreach ($merge as $object) { 
             foreach ($object as $key => $value) {
-               $value->$key = $value;
+               $result->$key = $value;
             }
         }
         
-        return $value;
+        return $result;
     }
 }

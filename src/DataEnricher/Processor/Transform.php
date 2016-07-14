@@ -13,18 +13,36 @@ class Transform implements Processor
     use Processor\Implementation;
     
     /**
-     * Allowed transformation functions
-     * @var type 
+     * Default transformation functions
+     * @var array
      */
-    public $allowed = [
-        'hash',
-        'base64_encode',
-        'base64_decode',
-        'json_encode',
-        'json_decode',
-        'serialize',
-        'unserialize'
+    public static $defaultFunctions = [
+        'hash' => 'hash',
+        'base64_encode' => 'base64_encode',
+        'base64_decode' => 'base64_decode',
+        'json_encode' => 'json_encode',
+        'json_decode' => 'json_decode',
+        'serialize' => 'serialize',
+        'unserialize' => 'unserialize'
     ];
+    
+    /**
+     * Allowed transformation functions
+     * @var array 
+     */
+    public $functions;
+    
+    
+    /**
+     * Class constructor
+     * 
+     * @param string $property  Property key with the processing instruction
+     */
+    public function __construct($property)
+    {
+        $this->property = $property;
+        $this->functions = static::$defaultFunctions;
+    }
     
     /**
      * Apply processing to a single node
@@ -46,14 +64,15 @@ class Transform implements Processor
         }
         
         foreach ($transformations as $transformation) {
-            list($fn, $arg) = explode(':', $transformation) + [null];
+            list($key, $arg) = explode(':', $transformation) + [null];
             
-            if (!in_array($fn, $this->allowed)) {
+            if (!isset($this->functions[$key])) {
                 trigger_error("Unknown transformation '$transformation'", E_USER_WARNING);
                 continue;
             }
             
-            $value = isset($arg) ? $fn($arg, $value) : $fn($value);
+            $fn = $this->functions[$key];
+            $value = isset($arg) ? call_user_func($fn, $arg, $value) : call_user_func($fn, $value);
         }
         
         $node->setResult($value);

@@ -23,7 +23,12 @@ class Merge implements Processor
         
         $list = $this->resolve($instruction);
         
-        $result = $this->merge($list);
+        if (isset($list) && !is_array($list)) {
+            $type = (is_object($list) ? get_class($list) . ' ' : '') . gettype($list);
+            throw new \Exception("Unable to apply {$this->property}: Expected an array, got a $type");
+        }
+        
+        $result = $this->merge((array)$list);
         $node->setResult($result);
     }
     
@@ -66,9 +71,18 @@ class Merge implements Processor
         
         $scalar = false;
         
-        foreach ($list as &$item) {
+        foreach ($list as $key => &$item) {
+            if (!isset($item)) {
+                unset($list[$key]);
+                continue;
+            }
+            
             if (is_object($item)) {
                 $item = get_object_vars($item);
+            }
+
+            if ($scalar && !is_scalar($item)) {
+                throw new \Exception("Unable to apply {$this->property}: Mixture of scalar and non-scalar values");
             }
             
             $scalar = is_scalar($item);
@@ -88,3 +102,4 @@ class Merge implements Processor
         return $result;
     }
 }
+

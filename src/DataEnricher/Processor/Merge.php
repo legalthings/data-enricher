@@ -24,8 +24,8 @@ class Merge implements Processor
         $list = $this->resolve($instruction);
         
         if (isset($list) && !is_array($list)) {
-            $type = (is_object($list) ? get_class($list) . ' ' : '') . gettype($list);
-            throw new \Exception("Unable to apply {$this->property}: Expected an array, got a $type");
+            throw new \Exception("Unable to apply {$this->property} processing instruction:"
+                . " Expected an array, got a " . (is_object($list) ? get_class($list) . ' ' : '') . gettype($list));
         }
         
         $result = $this->merge((array)$list);
@@ -44,13 +44,15 @@ class Merge implements Processor
             $list = $list->getResult();
         }
         
-        foreach ($list as &$item) {
-            if ($item instanceof Node) {
-                $item = $item->getResult();
-            }
-            
-            if ($item instanceof \Traversable) {
-                $item = iterator_to_array($item);
+        if (is_array($list)) {
+            foreach ($list as &$item) {
+                if ($item instanceof Node) {
+                    $item = $item->getResult();
+                }
+
+                if ($item instanceof \Traversable) {
+                    $item = iterator_to_array($item);
+                }
             }
         }
         
@@ -69,7 +71,7 @@ class Merge implements Processor
             return null;
         }
         
-        $scalar = false;
+        $scalar = [];
         
         foreach ($list as $key => &$item) {
             if (!isset($item)) {
@@ -80,15 +82,16 @@ class Merge implements Processor
             if (is_object($item)) {
                 $item = get_object_vars($item);
             }
-
-            if ($scalar && !is_scalar($item)) {
-                throw new \Exception("Unable to apply {$this->property}: Mixture of scalar and non-scalar values");
-            }
             
-            $scalar = is_scalar($item);
+            $scalar[] = is_scalar($item);
         }
 
-        if ($scalar) {
+        if (count(array_unique($scalar)) > 1) {
+            throw new \Exception("Unable to apply {$this->property} processing instruction:"
+                . " Mixture of scalar and non-scalar values");
+        }
+        
+        if ($scalar[0]) {
             $result = join('', $list);
         } else {
             $result = call_user_func_array('array_merge', $list);

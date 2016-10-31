@@ -10,73 +10,54 @@ use LegalThings\DataEnricher\Processor;
  */
 class MergeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testApplyToNodeWithObjects()
+    /**
+     * @var Processor\merge;
+     */
+    protected $processor;
+
+    public function setUp()
     {
-        $first = ['foo' => 'red', 'bar' => 'Sir'];
-        $second = (object)['bird' => 'duck', 'mammal' => 'monkey'];
-
-        $processor = new Processor\Merge('<merge>');
-        $node = $this->getMockBuilder(Node::class)
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock();
-
-        $node->expects($this->atLeastOnce())
-            ->method('getInstruction')
-            ->with($processor)
-            ->willReturn([$first, $second]);
-        
-        $node->expects($this->atLeastOnce())
-            ->method('setResult')
-            ->with((object)['foo' => 'red', 'bar' => 'Sir', 'bird' => 'duck', 'mammal' => 'monkey']);
-        
-        $processor->applyToNode($node);
+        $this->processor = new Processor\Merge('<merge>');
     }
     
-    public function testApplyToNodeWithArrays()
+    public function instructionProvider()
     {
-        $first = ['red', 'Sir'];
-        $second = ['duck', 'monkey'];
-
-        $processor = new Processor\Merge('<merge>');
-        $node = $this->getMockBuilder(Node::class)
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock();
-
-        $node->expects($this->atLeastOnce())
-            ->method('getInstruction')
-            ->with($processor)
-            ->willReturn([$first, $second]);
-        
-        $node->expects($this->atLeastOnce())
-            ->method('setResult')
-            ->with(['red', 'Sir', 'duck', 'monkey']);
-        
-        $processor->applyToNode($node);
+        return [
+            [
+                [['foo' => 'red', 'bar' => 'Sir'], (object)['bird' => 'duck', 'mammal' => 'monkey']],
+                (object)['foo' => 'red', 'bar' => 'Sir', 'bird' => 'duck', 'mammal' => 'monkey']
+            ],
+            [
+                [['red', 'Sir'], ['duck', 'monkey']],
+                ['red', 'Sir', 'duck', 'monkey']
+            ],
+            [
+                ['dark', 'moon'],
+                'darkmoon'
+            ]
+        ];
     }
     
-    public function testApplyToNodeWithStrings()
+    /**
+     * @dataProvider instructionProvider
+     * 
+     * @param array $instructions
+     * @param mixed $result
+     */
+    public function testApplyToNode(array $instructions, $result)
     {
-        $first = 'dark';
-        $second = 'moon';
-
-        $processor = new Processor\Merge('<merge>');
-        $node = $this->getMockBuilder(Node::class)
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock();
-
+        $node = $this->createMock(Node::class);
+        
         $node->expects($this->atLeastOnce())
             ->method('getInstruction')
-            ->with($processor)
-            ->willReturn([$first, $second]);
+            ->with($this->processor)
+            ->willReturn($instructions);
         
         $node->expects($this->atLeastOnce())
             ->method('setResult')
-            ->with('darkmoon');
+            ->with($result);
         
-        $processor->applyToNode($node);
+        $this->processor->applyToNode($node);
     }
     
     public function testApplyToNodeWithRefNode()
@@ -94,15 +75,11 @@ class MergeTest extends \PHPUnit_Framework_TestCase
             ->method('getResult')
             ->willReturn($data);
         
-        $processor = new Processor\Merge('<merge>');
-        $node = $this->getMockBuilder(Node::class)
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock();
+        $node = $this->createMock(Node::class);
 
         $node->expects($this->atLeastOnce())
             ->method('getInstruction')
-            ->with($processor)
+            ->with($this->processor)
             ->willReturn([
                 $refNode,
                 (object)[
@@ -115,7 +92,7 @@ class MergeTest extends \PHPUnit_Framework_TestCase
             ->method('setResult')
             ->with((object)['foo' => 'red', 'bar' => 'Sir', 'bird' => 'duck', 'mammal' => 'monkey']);
         
-        $processor->applyToNode($node);
+        $this->processor->applyToNode($node);
     }
     
     /**
@@ -124,18 +101,14 @@ class MergeTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidInstructions()
     {
-        $processor = new Processor\Merge('<merge>');
-        $node = $this->getMockBuilder(Node::class)
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock();
+        $node = $this->createMock(Node::class);
 
         $node->expects($this->atLeastOnce())
             ->method('getInstruction')
-            ->with($processor)
+            ->with($this->processor)
             ->willReturn('not an array');
         
-        $processor->applyToNode($node);
+        $this->processor->applyToNode($node);
     }
     
     /**
@@ -147,17 +120,13 @@ class MergeTest extends \PHPUnit_Framework_TestCase
         $first = ['red', 'Sir'];
         $second = 'a scalar value';
 
-        $processor = new Processor\Merge('<merge>');
-        $node = $this->getMockBuilder(Node::class)
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock();
+        $node = $this->createMock(Node::class);
 
         $node->expects($this->atLeastOnce())
             ->method('getInstruction')
-            ->with($processor)
+            ->with($this->processor)
             ->willReturn([$first, $second]);
         
-        $processor->applyToNode($node);
+        $this->processor->applyToNode($node);
     }
 }

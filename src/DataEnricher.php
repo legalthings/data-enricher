@@ -24,6 +24,7 @@ class DataEnricher
         '<src>' => Processor\Http::class,
         '<jmespath>' => Processor\JmesPath::class,
         '<transformation>' => Processor\Transform::class,
+        '<math>' => Processor\Math::class,
         
         // Deprecated
         '_ref' => Processor\Reference::class,

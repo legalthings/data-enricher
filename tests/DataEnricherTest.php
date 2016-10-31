@@ -72,7 +72,7 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
     /**
      * Test DataEnricher::applyTo() self
      */
-    public function testApplyTo_self()
+    public function testApplyToWithSelf()
     {
         $this->markTestIncomplete('tests needs to be updated, it no longer works after implementing nodes');
         
@@ -95,7 +95,7 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
     /**
      * Test DataEnricher::applyTo() other object
      */
-    public function testApplyTo_target()
+    public function testApplyToWithtarget()
     {
         $this->markTestIncomplete('tests needs to be updated, it no longer works after implementing nodes');
         $target = (object)['diz' => 'fab'];
@@ -112,7 +112,7 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
      * @expectedException Exception
      * @expectedExceptionMessage Data enricher on works on an object, not on a string
      */
-    public function testConstruct_string()
+    public function testConstructWithString()
     {
         $this->enricher->applyTo('foo');
     }
@@ -123,7 +123,7 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
      * @expectedException Exception
      * @expectedExceptionMessage Data enricher on works on an object, not on a array
      */
-    public function testConstruct_array()
+    public function testConstructWithArray()
     {
         $this->enricher->applyTo(['foo' => 'bar']);
     }

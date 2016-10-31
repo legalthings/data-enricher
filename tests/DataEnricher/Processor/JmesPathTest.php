@@ -13,10 +13,8 @@ class JmesPathTest extends \PHPUnit_Framework_TestCase
     public function testApplyToNodeWithObject()
     {
         $processor = new Processor\JmesPath('<jmespath>');
-        $node = $this->getMockBuilder(Node::class)
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock();
+        
+        $node = $this->createMock(Node::class);
         
         $data = new \stdClass;
         $data->foo = 'red';

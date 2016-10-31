@@ -62,10 +62,7 @@ class MergeTest extends \PHPUnit_Framework_TestCase
     
     public function testApplyToNodeWithRefNode()
     {
-        $refNode = $this->getMockBuilder(Node::class)
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock();
+        $refNode = $this->createMock(Node::class);
         
         $data = new \stdClass;
         $data->foo = 'red';

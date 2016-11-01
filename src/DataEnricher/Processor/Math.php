@@ -18,15 +18,22 @@ class Math implements Processor
     /**
      * @var Hoa\Compiler\Llk\Parser
      */
-    protected $parser;
+    protected static $parser;
     
-    public function __construct($property)
+    /**
+     * Create a parser for arithmitic expressions
+     * 
+     * @return Hoa\Compiler\Llk\Parser
+     */
+    protected function getParser()
     {
-        $this->property = $property;
+        if (!isset(static::$parser)) {
+            static::$parser = Hoa\Compiler\Llk\Llk::load(
+                new Hoa\File\Read('hoa://Library/Math/Arithmetic.pp')
+            );
+        }
         
-        $this->parser = Hoa\Compiler\Llk\Llk::load(
-            new Hoa\File\Read('hoa://Library/Math/Arithmetic.pp')
-        );
+        return static::$parser;
     }
     
     /**
@@ -37,8 +44,9 @@ class Math implements Processor
     public function applyToNode(Node $node)
     {
         $expression = $node->getInstruction($this);
+        $ast = $this->getParser()->parse($expression);
+        
         $variables = $node->getResult() ?: [];
-
         $arithmetic = new Hoa\Math\Visitor\Arithmetic();
         
         foreach ($variables as $name => $value) {
@@ -50,7 +58,6 @@ class Math implements Processor
             }
         }
         
-        $ast = $this->parser->parse($expression);
         $result = $arithmetic->visit($ast);
         
         $node->setResult($result);

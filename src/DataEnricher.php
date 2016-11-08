@@ -25,6 +25,7 @@ class DataEnricher
         '<jmespath>' => Processor\JmesPath::class,
         '<transformation>' => Processor\Transform::class,
         '<math>' => Processor\Math::class,
+        '<enrich>' => Processor\Enrich::class,
         
         // Deprecated
         '_ref' => Processor\Reference::class,

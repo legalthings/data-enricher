@@ -8,10 +8,10 @@ use LegalThings\DataEnricher\Processor;
 /**
  * @covers LegalThings\DataEnricher\Processor\Enrich
  */
-class MathTest extends \PHPUnit_Framework_TestCase
+class EnrichTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Processor\Math;
+     * @var Processor\Enrich;
      */
     protected $processor;
 
@@ -34,16 +34,15 @@ class MathTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 (object)[
-                    'extra' => [['user' => ['email' => 'john@example.com', 'gender' => 'male']], ['user' => ['email' => 'jane@example.com', 'gender' => 'female']]],
+                    'extra' => [['email' => 'john@example.com', 'gender' => 'male'], ['email' => 'jane@example.com', 'gender' => 'female']],
                     'match' => [
-                        'extra' => 'user.email',
+                        'extra' => 'email',
                         'source' => 'email'
-                    ],
-                    'select' => 'user' // @todo
+                    ]
                 ],
                 [['email' => 'john@example.com', 'name' => 'John Doe'], ['email' => 'jane@example.com', 'name' => 'Jane Doe']],
                 [['email' => 'john@example.com', 'name' => 'John Doe', 'gender' => 'male'], ['email' => 'jane@example.com', 'name' => 'Jane Doe', 'gender' => 'female']]
-            ]
+            ],
         ];
     }
     

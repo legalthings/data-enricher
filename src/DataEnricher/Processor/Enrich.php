@@ -32,7 +32,7 @@ class Enrich implements Processor
         
         foreach ($instruction->extra as $extra) {
             $key = \Jasny\DotKey::on($extra)->get($match['extra']);
-
+            
             if (!isset($key) || isset($extraIndexed[$key])) {
                 continue;
             }
@@ -47,17 +47,13 @@ class Enrich implements Processor
         
         foreach ($source as &$item) {
             $key = \Jasny\DotKey::on($item)->get($match['source']);
-
-            if (!isset($key)) {
+            
+            if (!isset($key) || !isset($extraIndexed[$key])) {
                 continue;
             }
             
             if (!is_scalar($key)) {
                 trigger_error("Trying to match on non-scalar type", E_WARNING);
-                continue;
-            }
-            
-            if (!isset($extraIndexed[$key])) {
                 continue;
             }
             

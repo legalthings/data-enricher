@@ -14,6 +14,7 @@ Enrich objects by processing special properties.
 * `<switch>` - Choose one of the child properties based on a property in the document
 * `<src>` - Load an external resource (through HTTP)
 * `<merge>` - Merge a set of objects
+* `<enrich>` - Enrich an object with extra data by matching properties
 * `<tpl>` - Parse text as [Mustache](https://mustache.github.io/) template
 * `<transform>` - Transform the input using a function. The following functions are available
   * [`hash:algo`](http://php.net/hash) - Replace `algo` with the algoritm

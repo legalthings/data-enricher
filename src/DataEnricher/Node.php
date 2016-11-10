@@ -110,10 +110,25 @@ class Node extends \stdClass
             throw new \LogicException("Node doesn't have instruction property '$prop'");
         }
         
-        $value = $this->$prop;
-        
-        if ($value instanceof self) {
+        return $this->resolve($this->$prop);
+    }
+
+    /**
+     * Resolve nodes within the value
+     * 
+     * @param mixed $value
+     * @return mixed
+     */
+    protected function resolve($value)
+    {
+        while ($value instanceof self) {
             $value = $value->getResult();
+        }
+        
+        if (is_array($value) || is_object($value)) {
+            foreach ($value as &$item) {
+                $item = $this->resolve($item);
+            }
         }
         
         return $value;

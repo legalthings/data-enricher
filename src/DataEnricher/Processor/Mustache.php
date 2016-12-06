@@ -26,9 +26,53 @@ class Mustache implements Processor
     public function applyToNode(Node $node)
     {
         $template = $node->getInstruction($this);
-        $result = $this->parse($template);
         
+        if (!is_string($template) && !is_array($template) && !is_object($template)) {
+            return trigger_error("Unable to parse given template of type: " . gettype($template), E_WARNING);
+        }
+        
+        $result = $this->getParsedResult($template);
         $node->setResult($result);
+    }
+    
+    /**
+     * Parse a template by mustache if possible and return the result
+     * 
+     * @param mixed $template
+     *
+     * @return mixed $result
+     */
+    protected function getParsedResult($template)
+    {
+        if (is_string($template)) {
+            return $this->parse($template);
+        } elseif (is_array($template)) {
+            return array_map([$this, 'parse'], $template);
+        } elseif (is_object($template)) {
+            return $this->parseObject($template);
+        }
+        
+        return $template;
+    }
+    
+    /**
+     * Parse an object with mustache
+     * 
+     * @param  object $template
+     *
+     * @return object $result
+     */
+    protected function parseObject($template)
+    {
+        $result = new \stdClass();
+        
+        foreach ($template as $key => $value) {
+            $parsedKey = $this->parse($key);
+            $parsedValue = $this->getParsedResult($value);
+            $result->$parsedKey = $parsedValue;
+        }
+        
+        return $result;
     }
     
     /**

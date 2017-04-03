@@ -23,7 +23,9 @@ class Transform implements Processor
         'json_encode' => 'json_encode',
         'json_decode' => 'json_decode',
         'serialize' => 'serialize',
-        'unserialize' => 'unserialize'
+        'unserialize' => 'unserialize',
+        'strtotime' => 'strtotime',
+        'date' => 'date'
     ];
     
     /**

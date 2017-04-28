@@ -5,9 +5,7 @@ Data enricher
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/legalthings/data-enricher/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/legalthings/data-enricher/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/legalthings/data-enricher/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/legalthings/data-enricher/?branch=master)
 
-Enrich objects by processing special properties.
-
-#### Special properties
+Enrich objects by processing special properties known as data instruction.
 
 * `<ref>` - Resolve a reference to another part of the document using a dot key path
 * `<ifset>` - Checks if a reference is null. If so, replace the object by null.

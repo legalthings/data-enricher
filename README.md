@@ -22,6 +22,8 @@ Enrich objects by processing special properties known as data instruction.
   * [`json_decode`](http://php.net/json_decode)
   * [`serialize`](http://php.net/serialize)
   * [`unserialize`](http://php.net/unserialize)
+  * [`strtotime`](http://php.net/strtotime)
+  * [`date`] (http://php.net/date)
 * `<jmespath>` - Project an object using the [JMESPath](http://jmespath.org/) query language
 
 ## Installation

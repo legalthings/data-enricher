@@ -23,7 +23,9 @@ class Transform implements Processor
         'json_encode' => 'json_encode',
         'json_decode' => 'json_decode',
         'serialize' => 'serialize',
-        'unserialize' => 'unserialize'
+        'unserialize' => 'unserialize',
+        'strtotime' => 'strtotime',
+        'date' => 'date'
     ];
     
     /**
@@ -64,7 +66,7 @@ class Transform implements Processor
         }
         
         foreach ($transformations as $transformation) {
-            list($key, $arg) = explode(':', $transformation) + [null];
+            list($key, $arg) = explode(':', $transformation) + [null, null];
             
             if (!isset($this->functions[$key])) {
                 trigger_error("Unknown transformation '$transformation'", E_USER_WARNING);

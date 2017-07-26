@@ -66,7 +66,7 @@ class Transform implements Processor
         }
         
         foreach ($transformations as $transformation) {
-            list($key, $arg) = explode(':', $transformation) + [null];
+            list($key, $arg) = explode(':', $transformation) + [null, null];
             
             if (!isset($this->functions[$key])) {
                 trigger_error("Unknown transformation '$transformation'", E_USER_WARNING);

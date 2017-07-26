@@ -23,7 +23,7 @@ Enrich objects by processing special properties known as data instruction.
   * [`serialize`](http://php.net/serialize)
   * [`unserialize`](http://php.net/unserialize)
   * [`strtotime`](http://php.net/strtotime)
-  * [`date`] (http://php.net/date)
+  * [`date`](http://php.net/date)
 * `<jmespath>` - Project an object using the [JMESPath](http://jmespath.org/) query language
 
 ## Installation

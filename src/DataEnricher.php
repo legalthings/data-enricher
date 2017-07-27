@@ -26,6 +26,7 @@ class DataEnricher
         '<transformation>' => Processor\Transform::class,
         '<math>' => Processor\Math::class,
         '<enrich>' => Processor\Enrich::class,
+        '<dateformat>' => Processer\DateFormat::class,
         
         // Deprecated
         '_ref' => Processor\Reference::class,

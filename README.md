@@ -25,6 +25,7 @@ Enrich objects by processing special properties known as data instruction.
   * [`strtotime`](http://php.net/strtotime)
   * [`date`](http://php.net/date)
 * `<jmespath>` - Project an object using the [JMESPath](http://jmespath.org/) query language
+* `<dateformat>` - Takes a date and a format (defaults to `Y-m-d`) and formats the accordingly. Optionally you can set the timezone if you wish to output timezone information.
 
 ## Installation
 

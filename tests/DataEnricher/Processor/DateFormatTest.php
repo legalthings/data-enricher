@@ -40,13 +40,6 @@ class DateFormatTest extends \PHPUnit_Framework_TestCase
             [
                 (object)[
                     'date' => '26-07-2017',
-                    'format' => 'c'
-                ],
-                '2017-07-26T00:00:00+02:00'
-            ],
-            [
-                (object)[
-                    'date' => '26-07-2017',
                     'format' => 'c',
                     'timezone' => 'UTC'
                 ],

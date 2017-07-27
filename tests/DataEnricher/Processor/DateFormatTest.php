@@ -6,7 +6,7 @@ use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
 
 /**
- * @covers LegalThings\DataEnricher\Processor\JmesPath
+ * @covers LegalThings\DataEnricher\Processor\DateFormat
  */
 class DateFormatTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +15,7 @@ class DateFormatTest extends \PHPUnit_Framework_TestCase
      */
     protected $processor;
     
-    public function setUp() 
+    public function setup() 
     {
         $this->processor = new Processor\DateFormat('<dateformat>');
     }

@@ -6,21 +6,11 @@ use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
 
 /**
- * Transform processor, apply transformation functions on data
+ * DateFormat processor, format date objects
  */
 class DateFormat implements Processor
 {
     use Processor\Implementation;
-    
-    /**
-     * Class constructor
-     * 
-     * @param string $property  Property key with the processing instruction
-     */
-    public function __construct($property)
-    {
-        $this->property = $property;
-    }
     
     /**
      * Apply processing to a single node

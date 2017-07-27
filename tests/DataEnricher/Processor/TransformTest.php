@@ -6,7 +6,7 @@ use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
 
 /**
- * @covers LegalThings\DataEnricher\Processor\JmesPath
+ * @covers LegalThings\DataEnricher\Processor\Transform
  */
 class TransformTest extends \PHPUnit_Framework_TestCase
 {

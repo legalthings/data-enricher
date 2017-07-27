@@ -55,8 +55,6 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        DataEnricher::$defaultProcessors = [];
-        
         $this->object = self::objectify(['baz' => 'quz', 'zoo' => ['_upper' => 'fox']]);
         
         $this->upperProphecy = $this->prophesize(Processor::class);
@@ -126,5 +124,54 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
     public function testConstructWithArray()
     {
         $this->enricher->applyTo(['foo' => 'bar']);
+    }
+    
+    public function testContructDefaultProcessor()
+    {
+        $this->enricher = new DataEnricher();
+        foreach($this->enricher->processors as $processor) {
+            switch ($processor->getProperty()) {
+                case '<ifset>':
+                    $this->assertInstanceOf(Processor\IfSet::class, $processor);
+                    break;
+                case '<ref>':
+                case '_ref':
+                    $this->assertInstanceOf(Processor\Reference::class, $processor);
+                    break;
+                case '<switch>':
+                case '_switch':
+                    $this->assertInstanceOf(Processor\SwitchChoose::class, $processor);
+                    break;
+                case '<merge>':
+                case '_merge':
+                    $this->assertInstanceOf(Processor\Merge::class, $processor);
+                    break;
+                case '<tpl>':
+                case '_tpl':
+                    $this->assertInstanceOf(Processor\Mustache::class, $processor);
+                    break;                    
+                case '<src>':
+                case '_src':
+                    $this->assertInstanceOf(Processor\Http::class, $processor);
+                    break;
+                case '<jmespath>':
+                case '_jmespath':
+                    $this->assertInstanceOf(Processor\JmesPath::class, $processor);
+                    break;
+                case '<transformation>':
+                case '_transformation':
+                    $this->assertInstanceOf(Processor\Transform::class, $processor);
+                    break;
+                case '<math>':
+                    $this->assertInstanceOf(Processor\Math::class, $processor);
+                    break;
+                case '<enrich>':
+                    $this->assertInstanceOf(Processor\Enrich::class, $processor);
+                    break;
+                case '<dateformat>':
+                    $this->assertInstanceOf(Processor\DateFormat::class, $processor);
+                    break;
+            }
+        }
     }
 }

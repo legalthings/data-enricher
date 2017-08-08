@@ -63,10 +63,7 @@ class DateFormatTest extends \PHPUnit_Framework_TestCase
      */
     public function testApplyToNode($instruction, $result)
     {        
-        $node = $this->getMockBuilder(Node::class)
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock();
+        $node = $this->createMock(Node::class);
         
         $node->expects($this->atLeastOnce())
             ->method('getInstruction')
@@ -76,6 +73,21 @@ class DateFormatTest extends \PHPUnit_Framework_TestCase
         $node->expects($this->atLeastOnce())
             ->method('setResult')
             ->with($result);
+        
+        $this->processor->applyToNode($node);
+    }
+    
+    public function testApplyToNodeWithoutDate()
+    {
+        $node = $this->createMock(Node::class);
+       
+        $node->expects($this->atLeastOnce())
+            ->method('getInstruction')
+            ->with($this->processor)
+            ->willReturn((object)['format' => 'Y-m-d']);
+        
+        $node->expects($this->never())
+              ->method('setResult');
         
         $this->processor->applyToNode($node);
     }

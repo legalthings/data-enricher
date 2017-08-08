@@ -75,4 +75,49 @@ class TransformTest extends \PHPUnit_Framework_TestCase
         
         $processor->applyToNode($node);
     }
+    
+    public function testApplyToNodeWithoutInput()
+    {
+        $processor = new Processor\Transform('<transformation>');
+        $node = $this->getMockBuilder(Node::class)
+            ->disableOriginalConstructor()
+            ->disableProxyingToOriginalMethods()
+            ->getMock();
+        
+        $node->input = null;
+        
+        $node->expects($this->atLeastOnce())
+            ->method('getInstruction')
+            ->with($processor)
+            ->willReturn(['hash:sha256']);
+        
+        $node->expects($this->never())
+            ->method('setResult');
+        
+        $processor->applyToNode($node);
+    }
+    
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     */
+    public function testApplyToNodeWithInvalidMethod()
+    {
+        $processor = new Processor\Transform('<transformation>');
+        $node = $this->getMockBuilder(Node::class)
+            ->disableOriginalConstructor()
+            ->disableProxyingToOriginalMethods()
+            ->getMock();
+        
+        $node->input = 1483228800;
+        
+        $node->expects($this->atLeastOnce())
+            ->method('getInstruction')
+            ->with($processor)
+            ->willReturn(['unknown']);
+        
+        $node->expects($this->never())
+            ->method('setResult');
+        
+        $processor->applyToNode($node);
+    }
 }

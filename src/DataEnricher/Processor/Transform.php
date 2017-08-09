@@ -69,8 +69,7 @@ class Transform implements Processor
             list($key, $arg) = explode(':', $transformation) + [null, null];
             
             if (!isset($this->functions[$key])) {
-                trigger_error("Unknown transformation '$transformation'", E_USER_WARNING);
-                continue;
+                throw new \Exception("Unknown transformation '$transformation'");
             }
             
             $fn = $this->functions[$key];

@@ -91,11 +91,14 @@ class Merge implements Processor
                 . " Mixture of scalar and non-scalar values");
         }
         
-        if ($scalar[0]) {
+        if (count($scalar) > 0 && $scalar[0]) {
             $result = join('', $list);
         } else {
+            if(empty($list)) {
+                return null;
+            }
             $result = call_user_func_array('array_merge', $list);
-
+            
             // Is associative array
             if (array_keys($result) !== array_keys(array_keys($result))) {
                 $result = (object)$result;

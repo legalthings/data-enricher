@@ -34,6 +34,31 @@ class MergeTest extends \PHPUnit_Framework_TestCase
             [
                 ['dark', 'moon'],
                 'darkmoon'
+            ],
+            [
+                ['foo', 'bar', null],
+                'foobar'
+            ],
+            [
+                [null, null],
+                null
+            ],
+            [
+                [],
+                null
+            ],
+            [
+                [
+                    new \ArrayIterator([
+                        'foo' => 'red',
+                        'bar' => 'Sir'
+                    ]),            
+                    [
+                       'bird' => 'duck',
+                        'mammal' => 'monkey'
+                    ]
+                ],
+                (object)['foo' => 'red', 'bar' => 'Sir', 'bird' => 'duck', 'mammal' => 'monkey']
             ]
         ];
     }
@@ -61,6 +86,39 @@ class MergeTest extends \PHPUnit_Framework_TestCase
     }
     
     public function testApplyToNodeWithRefNode()
+    {
+        $refNode = $this->createMock(Node::class);
+        
+        $data = [
+            (object) [
+                'foo' => 'red',
+                'bar' => 'Sir'
+            ],            
+            (object)[
+               'bird' => 'duck',
+                'mammal' => 'monkey'
+            ]
+        ];
+        
+        $refNode->expects($this->atLeastOnce())
+            ->method('getResult')
+            ->willReturn($data);
+        
+        $node = $this->createMock(Node::class);
+
+        $node->expects($this->atLeastOnce())
+            ->method('getInstruction')
+            ->with($this->processor)
+            ->willReturn($refNode);
+        
+        $node->expects($this->atLeastOnce())
+            ->method('setResult')
+            ->with((object)['foo' => 'red', 'bar' => 'Sir', 'bird' => 'duck', 'mammal' => 'monkey']);
+        
+        $this->processor->applyToNode($node);
+    }
+    
+    public function testApplyToNodeWithRefAndArrayNode()
     {
         $refNode = $this->createMock(Node::class);
         

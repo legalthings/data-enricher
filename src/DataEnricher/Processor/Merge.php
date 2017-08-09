@@ -91,7 +91,7 @@ class Merge implements Processor
                 . " Mixture of scalar and non-scalar values");
         }
         
-        if ($scalar[0]) {
+        if (count($scalar) > 0 && $scalar[0]) {
             $result = join('', $list);
         } else {
             if(empty($list)) {

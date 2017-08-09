@@ -28,7 +28,7 @@ class Merge implements Processor
                 . " Expected an array, got a " . (is_object($list) ? get_class($list) . ' ' : '') . gettype($list));
         }
         
-        $result = $this->merge((array)$list);
+        $result = $this->execute((array)$list);
         $node->setResult($result);
     }
     
@@ -65,7 +65,7 @@ class Merge implements Processor
      * @param array $list
      * @return \stdClass|array|string
      */
-    protected function merge(array $list)
+    protected function execute(array $list)
     {
         if (empty($list)) {
             return null;
@@ -94,7 +94,7 @@ class Merge implements Processor
         if (count($scalar) > 0 && $scalar[0]) {
             $result = join('', $list);
         } else {
-            if(empty($list)) {
+            if (empty($list)) {
                 return null;
             }
             $result = call_user_func_array('array_merge', $list);

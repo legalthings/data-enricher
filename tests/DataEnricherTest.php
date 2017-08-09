@@ -174,4 +174,34 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
             }
         }
     }
+    
+    public function testApplyToIntegration()
+    {
+        $json = file_get_contents('./tests/_data/example.json');
+        $object = json_decode($json);
+        
+        $enricher = new DataEnricher();
+        $enricher->applyTo($object);
+        
+        $expected = (object) [
+            'foo' => (object) [
+              'bar' => (object) [
+                'qux' => 12345,
+              ],
+              'term' => 'data enrichment',
+              'city' => 'Amsterdam',
+              'country' => 'Netherlands',
+            ],
+            'amount' => 12345,
+            'message' => 'I want to go to Amsterdam, Netherlands',
+            'shipping' => 'PostNL',
+            'profile' => (object) [
+              'qux' => 12345,
+              'apples' => 100,
+              'pears' => 220,
+            ]
+        ];
+        
+        $this->assertEquals($expected, $object);
+    }
 }

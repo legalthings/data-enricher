@@ -52,7 +52,7 @@ Enrich objects by processing special properties known as data instruction.
     "<tpl>": "I want to go to {{ foo.city }}, {{ foo.country }}"
   },
   "shipping": {
-    "<switch>": "foo.city",
+    "<switch>": "foo.country",
     "USA": "UPS",
     "Netherlands": "PostNL",
     "_other": "DHL"
@@ -99,7 +99,7 @@ echo json_encode($object, JSON_PRETTY_PRINT);
     "bar": {
       "qux": 12345,
     },
-    "term": "DuckDuckGo",
+    "term": "data enrichment",
     "city": "Amsterdam",
     "country": "Netherlands"
   },

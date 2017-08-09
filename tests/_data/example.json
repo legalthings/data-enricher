@@ -1,0 +1,31 @@
+{
+  "foo": {
+    "bar": {
+      "qux": 12345
+    },
+    "term": "data enrichment",
+    "city": "Amsterdam",
+    "country": "Netherlands"
+  },
+  "amount": {
+    "<ref>" : "$.foo.bar.qux"
+  },
+  "message": {
+    "<tpl>": "I want to go to {{ foo.city }}, {{ foo.country }}"
+  },
+  "shipping": {
+    "<switch>": "foo.country",
+    "USA": "UPS",
+    "Netherlands": "PostNL",
+    "_other": "DHL"
+  },
+  "profile": {
+    "<merge>": [
+      { "<ref>": "foo.bar" },
+      {
+        "apples": 100,
+        "pears": 220
+      }
+    ]
+  }
+}

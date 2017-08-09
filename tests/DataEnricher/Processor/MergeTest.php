@@ -34,6 +34,14 @@ class MergeTest extends \PHPUnit_Framework_TestCase
             [
                 ['dark', 'moon'],
                 'darkmoon'
+            ],
+            [
+                ['foo', 'bar', null],
+                'foobar'
+            ],
+            [
+                [null, null],
+                null
             ]
         ];
     }

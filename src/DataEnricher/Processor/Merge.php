@@ -94,8 +94,11 @@ class Merge implements Processor
         if ($scalar[0]) {
             $result = join('', $list);
         } else {
+            if(count($list) == 0) {
+                return null;
+            }
             $result = call_user_func_array('array_merge', $list);
-
+            
             // Is associative array
             if (array_keys($result) !== array_keys(array_keys($result))) {
                 $result = (object)$result;

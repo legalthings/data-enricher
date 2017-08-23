@@ -61,6 +61,48 @@ class TransformTest extends \PHPUnit_Framework_TestCase
         $this->processor->applyToNode($node);
     }
     
+    public function testApplyToNodeWithObjectForTransformation()
+    {
+        $node = $this->createMock(Node::class);
+        
+        $node->expects($this->atLeastOnce())
+            ->method('getInstruction')
+            ->with($this->processor)
+            ->willReturn([
+                (object)[
+                    'function' => 'hash',
+                    'args' => ['sha256', 'test']
+                ]
+            ]);
+        
+        $node->expects($this->atLeastOnce())
+            ->method('setResult')
+            ->with(hash('sha256', 'test'));
+        
+        $this->processor->applyToNode($node);
+    }
+    
+    public function testApplyToNodeWithHashHmac()
+    {
+        $node = $this->createMock(Node::class);
+        
+        $node->expects($this->atLeastOnce())
+            ->method('getInstruction')
+            ->with($this->processor)
+            ->willReturn([
+                (object)[
+                    'function' => 'hash_hmac',
+                    'args' => ['sha256', 'data', 'secret']
+                ]
+            ]);
+        
+        $node->expects($this->atLeastOnce())
+            ->method('setResult')
+            ->with(hash_hmac('sha256', 'data', 'secret'));
+        
+        $this->processor->applyToNode($node);
+    }
+    
     public function testApplyToNodeWithObjectForStrToTimeConversion()
     {
         $node = $this->createMock(Node::class);

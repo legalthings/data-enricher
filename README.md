@@ -15,7 +15,10 @@ Enrich objects by processing special properties known as data instruction.
 * `<enrich>` - Enrich an object with extra data by matching properties
 * `<tpl>` - Parse text as [Mustache](https://mustache.github.io/) template
 * `<transform>` - Transform the input using a function. The following functions are available
+                  You can pass in a string with the following format `<function>:<arg>`
+                  Alternatively you can pass in an object to pass multiple args `{ function: <string>, args: [...] }`
   * [`hash:algo`](http://php.net/hash) - Replace `algo` with the algoritm
+  * [`hash_hmac`](http://php.net/hash_hmac)
   * [`base64_encode`](http://php.net/base64_encode)
   * [`base64_decode`](http://php.net/base64_decode)
   * [`json_encode`](http://php.net/json_encode)

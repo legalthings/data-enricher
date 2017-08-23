@@ -18,6 +18,7 @@ class Transform implements Processor
      */
     public static $defaultFunctions = [
         'hash' => 'hash',
+        'hash_hmac' => 'hash_hmac',
         'base64_encode' => 'base64_encode',
         'base64_decode' => 'base64_decode',
         'json_encode' => 'json_encode',
@@ -53,29 +54,60 @@ class Transform implements Processor
      */
     public function applyToNode(Node $node)
     {
-        $transformations = (array)$node->getInstruction($this);
+        $instruction = $node->getInstruction($this);
+        $transformations = !is_array($instruction) ? [$instruction] : $instruction;
         
-        if (!isset($node->input)) {
-            return;
-        }
-        
-        $value = $node->input;
-        
-        if ($value instanceof Node) {
-            $value = $value->getResult();
+        if (isset($node->input)) {
+            $input = $this->resolveNodes($node->input);
         }
         
         foreach ($transformations as $transformation) {
-            list($key, $arg) = explode(':', $transformation) + [null, null];
+            if (is_string($transformation) && !isset($input)) {
+                continue;
+            }
+            
+            if (is_string($transformation)) {
+                list($key, $args) = explode(':', $transformation) + [null, null];
+            } elseif (is_object($transformation) || is_array($transformation)) {
+                $transformation = (object)$transformation;
+                $key = isset($transformation->function) ? $transformation->function : null;
+                $args = isset($transformation->args) ? $transformation->args : [];
+            }
             
             if (!isset($this->functions[$key])) {
-                throw new \Exception("Unknown transformation '$transformation'");
+                throw new \Exception("Unknown transformation '$key'");
+            }
+            
+            if (isset($args)) {
+                $args = $this->resolveNodes($args);
             }
             
             $fn = $this->functions[$key];
-            $value = isset($arg) ? call_user_func($fn, $arg, $value) : call_user_func($fn, $value);
+            
+            if (is_string($transformation)) {
+                $result = isset($args) ? call_user_func($fn, $args, $input) : call_user_func($fn, $input);
+            } elseif (is_object($transformation)) {
+                $result = call_user_func_array($fn, $args);
+            }
         }
         
-        $node->setResult($value);
+        if (isset($result)) {
+            $node->setResult($result);
+        }
+    }
+    
+    /**
+     * Resolve instructions of nodes by getting their results
+     * 
+     * @param Node $node
+     * 
+     * @return mixed $result
+     */
+    protected function resolveNodes($node) {
+        if (!$node instanceof Node) {
+            return $node;
+        }
+
+        return $node->getResult();
     }
 }

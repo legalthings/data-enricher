@@ -27,6 +27,13 @@ Enrich objects by processing special properties known as data instruction.
   * [`unserialize`](http://php.net/unserialize)
   * [`strtotime`](http://php.net/strtotime)
   * [`date`](http://php.net/date)
+  * `public_encrypt`
+  * `private_encrypt`
+  * `private_decrypt`
+  * `generate_private_key`
+  * `generate_public_key`
+  * `generate_signature`
+  * `verify_signature`
 * `<jmespath>` - Project an object using the [JMESPath](http://jmespath.org/) query language
 * `<dateformat>` - Takes a date and a format (defaults to `Y-m-d`) and formats the accordingly. Optionally you can set the timezone if you wish to output timezone information.
 

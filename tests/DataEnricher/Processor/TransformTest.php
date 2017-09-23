@@ -214,7 +214,7 @@ class TransformTest extends \PHPUnit_Framework_TestCase
             ->willReturn([
                 (object)[
                     'function' => 'public_encrypt',
-                    'args' => ['my-data', $publicKey]
+                    'args' => [$this->getMockPrivateKey(), $publicKey]
                 ]
             ]);
         

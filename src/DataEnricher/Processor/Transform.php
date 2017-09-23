@@ -104,6 +104,9 @@ class Transform implements Processor
             }
         }
         
+        // super crutch to solve mongo and openssl global state issue
+        $this->getOpenSslErrors();
+        
         if (isset($result)) {
             $node->setResult($result);
         }
@@ -194,7 +197,8 @@ class Transform implements Processor
         openssl_private_encrypt($data, $result, $privKey, $padding);
         
         if (!is_string($result)) {
-            throw new \Exception("Failed to encrypt data. Result: '$result'");
+            $errors = join(', ', $this->getOpenSslErrors());
+            throw new \Exception("Failed to encrypt data. Result: '$result'. Errors: '$errors'");
         }
         
         $base64 = base64_encode($result);
@@ -245,7 +249,8 @@ class Transform implements Processor
         openssl_public_encrypt($data, $result, $key, $padding);
         
         if (!is_string($result)) {
-            throw new \Exception("Failed to encrypt data. Result: '$result'");
+            $errors = join(', ', $this->getOpenSslErrors());
+            throw new \Exception("Failed to encrypt data. Result: '$result'. Errors: '$errors'");
         }
         
         $base64 = base64_encode($result);
@@ -317,5 +322,23 @@ class Transform implements Processor
     function is_base64($data)
     {
         return base64_encode(base64_decode($data)) === $data;
+    }
+    
+    function getOpenSslErrors()
+    {
+        $errors = [];
+        
+        // super crutch to solve mongo and openssl global state issue
+        for ($i = 0; $i <= 255; $i++) {
+            $error = openssl_error_string();
+            
+            if (!$error) {
+                break;
+            }
+            
+            $errors[] = $error;
+        }
+        
+        return $errors;
     }
 }

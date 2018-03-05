@@ -172,6 +172,9 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
                 case '<dateformat>':
                     $this->assertInstanceOf(Processor\DateFormat::class, $processor);
                     break;
+                case '<equal>':
+                    $this->assertInstanceOf(Processor\Equal::class, $processor);
+                    break;
             }
         }
     }

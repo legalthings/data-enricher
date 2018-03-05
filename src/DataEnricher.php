@@ -28,6 +28,7 @@ class DataEnricher
         '<math>' => Processor\Math::class,
         '<enrich>' => Processor\Enrich::class,
         '<dateformat>' => Processor\DateFormat::class,
+        '<equal>' => Processor\Equal::class,
         
         // Deprecated
         '_ref' => Processor\Reference::class,

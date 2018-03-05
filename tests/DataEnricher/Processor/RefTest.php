@@ -6,9 +6,9 @@ use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
 
 /**
- * @covers LegalThings\DataEnricher\Processor\JmesPath
+ * @covers LegalThings\DataEnricher\Processor\Reference
  */
-class JmesPathTest extends \PHPUnit_Framework_TestCase
+class ReferenceTest extends \PHPUnit_Framework_TestCase
 {
     public function testApplyToNode()
     {

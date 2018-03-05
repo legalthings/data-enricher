@@ -23,6 +23,7 @@ class DataEnricher
         '<tpl>' => Processor\Mustache::class,
         '<src>' => Processor\Http::class,
         '<jmespath>' => Processor\JmesPath::class,
+        '<apply>' => Processor\JmesPath::class,
         '<transformation>' => Processor\Transform::class,
         '<math>' => Processor\Math::class,
         '<enrich>' => Processor\Enrich::class,

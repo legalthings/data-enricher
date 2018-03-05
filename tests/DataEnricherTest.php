@@ -154,6 +154,7 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
                 case '_src':
                     $this->assertInstanceOf(Processor\Http::class, $processor);
                     break;
+                case '<apply>':
                 case '<jmespath>':
                 case '_jmespath':
                     $this->assertInstanceOf(Processor\JmesPath::class, $processor);

@@ -22,10 +22,16 @@ class JmesPath implements Processor
      */
     public function applyToNode(Node $node)
     {
-        $path = $node->getInstruction($this);
-        $input = $node->getResult();
+        $instruction = $node->getInstruction($this);
         
-        $result = jmespath_search($path, $input);
+        if (is_array($instruction) || is_object($instruction)) {
+            $instruction = (object)$instruction;
+        }
+        
+        $input = is_string($instruction) ? $node->getResult() : $instruction->input;
+        $query = is_string($instruction) ? $instruction : $instruction->query;
+        
+        $result = jmespath_search($query, $input);
         static::objectivy($result);
         
         $node->setResult($result);

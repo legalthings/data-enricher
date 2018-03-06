@@ -193,6 +193,12 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
                 case '<decode>':
                     $this->assertInstanceOf(Processor\Decode::class, $processor);
                     break;
+                case '<serialize>':
+                    $this->assertInstanceOf(Processor\Serialize::class, $processor);
+                    break;
+                case '<unserialize>':
+                    $this->assertInstanceOf(Processor\Unserialize::class, $processor);
+                    break;
             }
         }
     }

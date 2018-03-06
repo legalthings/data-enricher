@@ -35,6 +35,8 @@ class DataEnricher
         '<join>' => Processor\Join::class,
         '<encode>' => Processor\Encode::class,
         '<decode>' => Processor\Decode::class,
+        '<serialize>' => Processor\Serialize::class,
+        '<unserialize>' => Processor\Unserialize::class,
         
         // Deprecated
         '_ref' => Processor\Reference::class,

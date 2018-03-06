@@ -30,6 +30,7 @@ class DataEnricher
         '<dateformat>' => Processor\DateFormat::class,
         '<equal>' => Processor\Equal::class,
         '<match>' => Processor\Match::class,
+        '<if>' => Processor\IfElse::class,
         
         // Deprecated
         '_ref' => Processor\Reference::class,

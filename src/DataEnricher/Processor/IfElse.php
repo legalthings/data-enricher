@@ -6,9 +6,9 @@ use LegalThings\DataEnricher\Node;
 use LegalThings\DataEnricher\Processor;
 
 /**
- * Match processor
+ * IfElse processor
  */
-class Match implements Processor
+class IfElse implements Processor
 {
     use Processor\Implementation;
     
@@ -25,19 +25,14 @@ class Match implements Processor
             $instruction = (object)$instruction;
         }
         
-        if (!isset($instruction) || !isset($instruction->input)) {
+        if (!isset($instruction) || !isset($instruction->condition)) {
             return;
         }
         
-        if (!isset($instruction->find) && !isset($instruction->regex)) {
-            return;
-        }
-        
-        if (isset($instruction->find)) {
-            $result = strpos($instruction->input, $instruction->find) !== false;
+        if ($instruction->condition) {
+            $result = isset($instruction->then) ? $instruction->then : $node->getResult();
         } else {
-            $flags = isset($instruction->flags) ? $instruction->flags : 0;
-            $result = preg_match($instruction->regex, $instruction->input, $matches, $flags);
+            $result = isset($instruction->else) ? $instruction->else : null;
         }
         
         $node->setResult($result);

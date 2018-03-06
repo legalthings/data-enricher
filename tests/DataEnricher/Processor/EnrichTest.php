@@ -43,6 +43,15 @@ class EnrichTest extends \PHPUnit_Framework_TestCase
                 [['email' => 'john@example.com', 'name' => 'John Doe'], ['email' => 'jane@example.com', 'name' => 'Jane Doe']],
                 [['email' => 'john@example.com', 'name' => 'John Doe', 'gender' => 'male'], ['email' => 'jane@example.com', 'name' => 'Jane Doe', 'gender' => 'female']]
             ],
+            [
+                (object)[
+                    'extra' => [['email' => 'john@example.com', 'gender' => 'male'], ['email' => 'jane@example.com', 'gender' => 'female']],
+                    'match' => 'email',
+                    'input' => [['email' => 'john@example.com', 'name' => 'John Doe'], ['email' => 'jane@example.com', 'name' => 'Jane Doe']]
+                ],
+                null,
+                [['email' => 'john@example.com', 'name' => 'John Doe', 'gender' => 'male'], ['email' => 'jane@example.com', 'name' => 'Jane Doe', 'gender' => 'female']]
+            ],
         ];
     }
     
@@ -53,7 +62,7 @@ class EnrichTest extends \PHPUnit_Framework_TestCase
      * @param array $source
      * @param float $result
      */
-    public function testApplyToNode($instruction, array $source, $result)
+    public function testApplyToNode($instruction, $source, $result)
     {
         $node = $this->createMock(Node::class);
 
@@ -62,10 +71,12 @@ class EnrichTest extends \PHPUnit_Framework_TestCase
             ->with($this->processor)
             ->willReturn($instruction);
 
-        $node->expects($this->atLeastOnce())
-            ->method('getResult')
-            ->willReturn($source);
-
+        if (isset($source)) {
+            $node->expects($this->atLeastOnce())
+                ->method('getResult')
+                ->willReturn($source);
+        }
+        
         $node->expects($this->atLeastOnce())
             ->method('setResult')
             ->with($result);

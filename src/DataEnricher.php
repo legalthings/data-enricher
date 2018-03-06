@@ -33,6 +33,7 @@ class DataEnricher
         '<replace>' => Processor\Replace::class,
         '<if>' => Processor\IfElse::class,
         '<join>' => Processor\Join::class,
+        '<encode>' => Processor\Encode::class,
         
         // Deprecated
         '_ref' => Processor\Reference::class,

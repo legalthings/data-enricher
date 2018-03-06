@@ -187,6 +187,9 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
                 case '<join>':
                     $this->assertInstanceOf(Processor\Join::class, $processor);
                     break;
+                case '<encode>':
+                    $this->assertInstanceOf(Processor\Encode::class, $processor);
+                    break;
             }
         }
     }

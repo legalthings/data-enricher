@@ -31,6 +31,7 @@ class DataEnricher
         '<equal>' => Processor\Equal::class,
         '<match>' => Processor\Match::class,
         '<if>' => Processor\IfElse::class,
+        '<join>' => Processor\Join::class,
         
         // Deprecated
         '_ref' => Processor\Reference::class,

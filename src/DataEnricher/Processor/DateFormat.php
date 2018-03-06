@@ -21,7 +21,7 @@ class DateFormat implements Processor
     {
         $instruction = $node->getInstruction($this);
         
-        if(!isset($instruction->date)) {
+        if(!isset($instruction->date) && !isset($instruction->input)) {
             return;
         }
         
@@ -30,9 +30,10 @@ class DateFormat implements Processor
             $format = $instruction->format;
         }
         
-        $date = new \DateTime($instruction->date);
+        $input = isset($instruction->input) ? $instruction->input : $instruction->date;
+        $date = new \DateTime($input);
         if (isset($instruction->timezone)) {
-            $date = new \DateTime($instruction->date, new \DateTimeZone($instruction->timezone));
+            $date = new \DateTime($input, new \DateTimeZone($instruction->timezone));
         }
         
         $result = $date->format($format);

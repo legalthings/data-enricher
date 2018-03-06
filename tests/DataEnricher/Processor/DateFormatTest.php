@@ -51,6 +51,13 @@ class DateFormatTest extends \PHPUnit_Framework_TestCase
                     'format' => 'Y-m-d'
                 ],
                 '2017-07-27'
+            ],
+            [
+                (object)[
+                    'input' => '2017-07-27T00:00:00+0200',
+                    'format' => 'Y-m-d'
+                ],
+                '2017-07-27'
             ]
         ];
     }

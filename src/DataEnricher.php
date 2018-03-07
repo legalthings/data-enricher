@@ -28,6 +28,7 @@ class DataEnricher
         '<math>' => Processor\Math::class,
         '<enrich>' => Processor\Enrich::class,
         '<dateformat>' => Processor\DateFormat::class,
+        '<numberformat>' => Processor\NumberFormat::class,
         '<equal>' => Processor\Equal::class,
         '<match>' => Processor\Match::class,
         '<replace>' => Processor\Replace::class,

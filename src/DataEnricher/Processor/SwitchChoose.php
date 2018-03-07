@@ -44,7 +44,7 @@ class SwitchChoose implements Processor
         
         $instruction->options = (object)$instruction->options;
         
-        $result = null;
+        $result = isset($instruction->default) ? $instruction->default : null;
         
         if (isset($instruction->options->{$instruction->on})) {
             $result = $instruction->options->{$instruction->on};

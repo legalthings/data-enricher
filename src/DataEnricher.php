@@ -38,6 +38,7 @@ class DataEnricher
         '<decode>' => Processor\Decode::class,
         '<serialize>' => Processor\Serialize::class,
         '<unserialize>' => Processor\Unserialize::class,
+        '<hash>' => Processor\Hash::class,
         
         // Deprecated
         '_ref' => Processor\Reference::class,

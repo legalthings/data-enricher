@@ -202,6 +202,9 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
                 case '<unserialize>':
                     $this->assertInstanceOf(Processor\Unserialize::class, $processor);
                     break;
+                case '<hash>':
+                    $this->assertInstanceOf(Processor\Hash::class, $processor);
+                    break;
             }
         }
     }

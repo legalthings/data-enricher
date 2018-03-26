@@ -13,9 +13,15 @@
         "issues": "https://github.com/legalthings/data-enricher/issues",
         "source": "https://github.com/legalthings/data-enricher"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/legalthings/jmespath.php"
+        }
+    ],
     "require": {
         "php": ">=5.5.0",
-        "mtdowling/jmespath.php": "^2.2",
+        "mtdowling/jmespath.php": "dev-master#8ec2d692c59e45184d16b4c9160e902397cfc659",
         "guzzlehttp/guzzle": "^6.0",
         "jasny/dotkey": "^1.0",
         "mustache/mustache": "^2.10",

@@ -28,7 +28,7 @@ class Mustache implements Processor
         $template = $node->getInstruction($this);
         
         if (!is_string($template) && !is_array($template) && !is_object($template)) {
-            return trigger_error("Unable to parse given template of type: " . gettype($template), E_WARNING);
+            return trigger_error("Unable to parse given template of type: " . gettype($template), E_USER_WARNING);
         }
         
         $result = $this->getParsedResult($template);

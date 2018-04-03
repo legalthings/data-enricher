@@ -43,7 +43,7 @@ class Enrich implements Processor
             }
             
             if (!is_scalar($key)) {
-                trigger_error("Trying to match on non-scalar type", E_WARNING);
+                trigger_error("Trying to match on non-scalar type", E_USER_WARNING);
                 continue;
             }
             
@@ -58,7 +58,7 @@ class Enrich implements Processor
             }
             
             if (!is_scalar($key)) {
-                trigger_error("Trying to match on non-scalar type", E_WARNING);
+                trigger_error("Trying to match on non-scalar type", E_USER_WARNING);
                 continue;
             }
             

@@ -10,53 +10,62 @@ use LegalThings\DataEnricher\Processor;
  */
 class ReferenceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testApplyToNode()
+    /**
+     * @var Processor\Reference;
+     */
+    protected $processor;
+
+    public function setUp()
     {
-        // for bc
-        $processor = new Processor\Reference('<ref>');
-        
-        $node = $this->createMock(Node::class);
-        
-        $data = new \stdClass;
-        $data->foo = (object)['bar' => 'crux'];
-        
-        $node->expects($this->atLeastOnce())
-            ->method('getInstruction')
-            ->with($processor)
-            ->willReturn('foo.bar');
-        
-        $node->expects($this->atLeastOnce())
-            ->method('getResult')
-            ->willReturn($data);
-        
-        $node->expects($this->atLeastOnce())
-            ->method('setResult')
-            ->with('crux');
-        
-        $processor->applyToNode($node);
+        $this->processor = new Processor\Reference('<ref>');
     }
     
-    public function testApplyToNodeAsJmesPath()
+    public function instructionProvider()
     {
-        $processor = new Processor\Reference('<ref>');
+        return [
+            [
+                'foo',
+                (object)['foo' => 'bar'],
+                [],
+                'bar'
+            ],
+            [
+                'foo.bar',
+                (object)['foo' => ['bar' => 'crux']],
+                [],
+                'crux'
+            ],
+            [
+                '$.foo.bar',
+                (object)['foo' => ['bar' => 'crux']],
+                [],
+                'crux'
+            ]
+        ];
+    }
+    
+    /**
+     * @dataProvider instructionProvider
+     * 
+     * @param string|object|array $instruction
+     * @param object              $source
+     * @param array|object        $target
+     * @param string|object|array $result
+     */
+    public function testApplyToNode($instruction, $source, $target, $result)
+    {
+        $processor = $this->processor->withSourceAndTarget($source, $target);
         
         $node = $this->createMock(Node::class);
-        
-        $data = new \stdClass;
-        $data->foo = (object)['bar' => 'crux'];
         
         $node->expects($this->atLeastOnce())
             ->method('getInstruction')
             ->with($processor)
-            ->willReturn("foo.bar=='crux'");
-        
-        $node->expects($this->atLeastOnce())
-            ->method('getResult')
-            ->willReturn($data);
+            ->willReturn($instruction);
         
         $node->expects($this->atLeastOnce())
             ->method('setResult')
-            ->with(true);
+            ->with($result);
         
         $processor->applyToNode($node);
     }

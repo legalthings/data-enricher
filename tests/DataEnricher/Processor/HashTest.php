@@ -31,8 +31,8 @@ class HashTest extends \PHPUnit_Framework_TestCase
             [['input' => 'foo', 'algo' => 'sha256', 'hmac' => 'bar'], '147933218aaabc0b8b10a2b3a5c34684c8d94341bcf10a4736dc7270f7741851'],
             [['input' => 'foo', 'algo' => 'sha512'], 'f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7'],
             [['input' => 'foo', 'algo' => 'sha512', 'hmac' => 'bar'], '24257d7210582a65c731ec55159c8184cc24c02489453e58587f71f44c23a2d61b4b72154a89d17b2d49448a8452ea066f4fc56a2bcead45c088572ffccdb3d8'],
-            [['input' => 'foo', 'algo' => 'crc32'], -1938594527],
-            [['input' => 'foo', 'algo' => 'crc32', 'hmac' => 'bar'], -1938594527] // doesn't support hmac variant
+            [['input' => 'foo', 'algo' => 'crc32'], 'a5c4fe49'],
+            [['input' => 'foo', 'algo' => 'crc32', 'hmac' => 'bar'], 'fb231313']
         ];
     }
     

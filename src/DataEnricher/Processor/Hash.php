@@ -101,7 +101,8 @@ class Hash implements Processor
      */
     public function crc32($input, $hmac = null)
     {
-        // doesn't support hmac variant
-        return crc32($input);
+        return $hmac ?
+            hash_hmac('crc32', $input, $hmac) :
+            hash('crc32', $input);
     }
 }

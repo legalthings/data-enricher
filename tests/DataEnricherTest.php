@@ -154,6 +154,7 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
                 case '_src':
                     $this->assertInstanceOf(Processor\Http::class, $processor);
                     break;
+                case '<apply>':
                 case '<jmespath>':
                 case '_jmespath':
                     $this->assertInstanceOf(Processor\JmesPath::class, $processor);
@@ -170,6 +171,39 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
                     break;
                 case '<dateformat>':
                     $this->assertInstanceOf(Processor\DateFormat::class, $processor);
+                    break;
+                case '<numberformat>':
+                    $this->assertInstanceOf(Processor\NumberFormat::class, $processor);
+                    break;
+                case '<equal>':
+                    $this->assertInstanceOf(Processor\Equal::class, $processor);
+                    break;
+                case '<match>':
+                    $this->assertInstanceOf(Processor\Match::class, $processor);
+                    break;
+                case '<replace>':
+                    $this->assertInstanceOf(Processor\Replace::class, $processor);
+                    break;
+                case '<if>':
+                    $this->assertInstanceOf(Processor\IfElse::class, $processor);
+                    break;
+                case '<join>':
+                    $this->assertInstanceOf(Processor\Join::class, $processor);
+                    break;
+                case '<encode>':
+                    $this->assertInstanceOf(Processor\Encode::class, $processor);
+                    break;
+                case '<decode>':
+                    $this->assertInstanceOf(Processor\Decode::class, $processor);
+                    break;
+                case '<serialize>':
+                    $this->assertInstanceOf(Processor\Serialize::class, $processor);
+                    break;
+                case '<unserialize>':
+                    $this->assertInstanceOf(Processor\Unserialize::class, $processor);
+                    break;
+                case '<hash>':
+                    $this->assertInstanceOf(Processor\Hash::class, $processor);
                     break;
             }
         }

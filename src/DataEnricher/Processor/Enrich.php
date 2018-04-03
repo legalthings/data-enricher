@@ -20,7 +20,12 @@ class Enrich implements Processor
     public function applyToNode(Node $node)
     {
         $instruction = $node->getInstruction($this);
-        $source = $node->getResult() ?: [];
+        
+        if (is_array($instruction) || is_object($instruction)) {
+            $instruction = (object)$instruction;
+        }
+        
+        $source = isset($instruction->input) ? $instruction->input : ($node->getResult() ?: []);
         
         if (is_string($instruction->match)) {
             $match = ['extra' => $instruction->match, 'source' => $instruction->match];

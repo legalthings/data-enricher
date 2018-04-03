@@ -24,10 +24,32 @@ class SwitchChoose implements Processor
      */
     public function applyToNode(Node $node)
     {
-        $ref = $node->getInstruction($this);
-        $cases = $node->getResult();
+        $instruction = $node->getInstruction($this);
+
+        // for bc
+        if (is_string($instruction)) {
+            $cases = $node->getResult();
+
+            $result = $this->choose($instruction, $cases);
+            return $node->setResult($result);
+        }
         
-        $result = $this->choose($ref, $cases);
+        if (is_array($instruction) || is_object($instruction)) {
+            $instruction = (object)$instruction;
+        }
+        
+        if (!isset($instruction->on) || !isset($instruction->options)) {
+            return;
+        }
+        
+        $instruction->options = (object)$instruction->options;
+        
+        $result = isset($instruction->default) ? $instruction->default : null;
+        
+        if (isset($instruction->options->{$instruction->on})) {
+            $result = $instruction->options->{$instruction->on};
+        }
+        
         $node->setResult($result);
     }
     

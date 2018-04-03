@@ -2,12 +2,12 @@
 
 namespace LegalThings\DataEnricher\Processor;
 
-use LegalThings\DataEnricher\Processor;
-use LegalThings\DataEnricher\Processor\Helper;
 use LegalThings\DataEnricher\Node;
+use LegalThings\DataEnricher\Processor;
 
 /**
- * Symbolic link to a property of the source object
+ * Reference JMESPath processor
+ * @see http://jmespath.org/
  */
 class Reference implements Processor
 {
@@ -18,7 +18,7 @@ class Reference implements Processor
     }
     
     /**
-     * Apply reference processing to a single node
+     * Apply processing to a single node
      * 
      * @param Node $node
      */

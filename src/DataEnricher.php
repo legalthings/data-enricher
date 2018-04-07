@@ -26,6 +26,7 @@ class DataEnricher
         '<apply>' => Processor\JmesPath::class,
         '<transformation>' => Processor\Transform::class,
         '<math>' => Processor\Math::class,
+        '<sum>' => Processor\Sum::class,
         '<enrich>' => Processor\Enrich::class,
         '<dateformat>' => Processor\DateFormat::class,
         '<numberformat>' => Processor\NumberFormat::class,

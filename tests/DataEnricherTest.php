@@ -166,6 +166,9 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
                 case '<math>':
                     $this->assertInstanceOf(Processor\Math::class, $processor);
                     break;
+                case '<sum>':
+                    $this->assertInstanceOf(Processor\Sum::class, $processor);
+                    break;
                 case '<enrich>':
                     $this->assertInstanceOf(Processor\Enrich::class, $processor);
                     break;
@@ -231,6 +234,45 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
             'shipping' => 'PostNL',
             'profile' => (object) [
               'qux' => 12345,
+              'apples' => 100,
+              'pears' => 220,
+            ]
+        ];
+        
+        $this->assertEquals($expected, $object);
+    }
+    
+    public function testApplyToWithSourceIntegration()
+    {
+        $json = file_get_contents('./tests/_data/example.json');
+        $object = json_decode($json);
+        $source = (object)[
+            'foo' => (object)[
+                'city' => 'foo-city',
+                'country' => 'foo-country',
+                'bar' => (object)[
+                    'qux' => 'foo-bar-cux'
+                ]
+            ]
+        ];
+        
+        $enricher = new DataEnricher();
+        $enricher->applyTo($object, $source);
+        
+        $expected = (object) [
+            'foo' => (object) [
+              'bar' => (object) [
+                'qux' => 12345,
+              ],
+              'term' => 'data enrichment',
+              'city' => 'Amsterdam',
+              'country' => 'Netherlands',
+            ],
+            'amount' => 'foo-bar-cux',
+            'message' => 'I want to go to foo-city, foo-country',
+            'shipping' => null,
+            'profile' => (object) [
+              'qux' => 'foo-bar-cux',
               'apples' => 100,
               'pears' => 220,
             ]

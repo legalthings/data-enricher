@@ -2,7 +2,7 @@
 
 namespace LegalThings\DataEnricher\Processor\Helper;
 
-use function JmesPath\search as jmespath_search;
+use Jasny\DotKey;
 
 /**
  * Get property from source or target by reference
@@ -47,8 +47,19 @@ trait GetByReference
     {
         $subject = $source;
         
-        $result = jmespath_search($ref, $subject);
+        if ($ref === '$') {
+            return $source;
+        } elseif ($ref === '@') {
+            return $target;
+        }
         
-        return $result;
+        if (substr($ref, 0, 2) === '$.') {
+            $ref = substr($ref, 2);
+        } elseif (substr($ref, 0, 2) === '@.') {
+            $ref = substr($ref, 2);
+            $subject = $target;
+        }
+        
+        return DotKey::on($subject)->get($ref);
     }
 }

@@ -30,7 +30,8 @@ class SwitchChooseTest extends \PHPUnit_Framework_TestCase
                         'foo' => 'first',
                         'bar' => 'second',
                         'crux' => 'third'
-                    ]
+                    ],
+                    "default" => 'fourth'
                 ],
                 'first'
             ],
@@ -67,6 +68,18 @@ class SwitchChooseTest extends \PHPUnit_Framework_TestCase
                     ]
                 ],
                 null
+            ],
+            [
+                [
+                    'on' => '30',
+                    'options' => [
+                        '30' => 'first',
+                        '40' => 'second',
+                        '50' => 'third'
+                    ],
+                    'default' => '60'
+                ],
+                'first'
             ],
         ];
     }

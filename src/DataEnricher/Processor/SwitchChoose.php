@@ -42,12 +42,12 @@ class SwitchChoose implements Processor
             return;
         }
         
-        $instruction->options = (object)$instruction->options;
+        $instruction->options = (array)$instruction->options;
         
         $result = isset($instruction->default) ? $instruction->default : null;
         
-        if (isset($instruction->options->{$instruction->on})) {
-            $result = $instruction->options->{$instruction->on};
+        if (isset($instruction->options[$instruction->on])) {
+            $result = $instruction->options[$instruction->on];
         }
         
         $node->setResult($result);

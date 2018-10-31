@@ -23,50 +23,63 @@ class SwitchChooseTest extends \PHPUnit_Framework_TestCase
     public function instructionProvider()
     {
         return [
+//            [
+//                [
+//                    'on' => 'foo',
+//                    'options' => [
+//                        'foo' => 'first',
+//                        'bar' => 'second',
+//                        'crux' => 'third'
+//                    ],
+//                    "default" => 'fourth'
+//                ],
+//                'first'
+//            ],
+//            [
+//                [
+//                    'on' => 'bar',
+//                    'options' => [
+//                        'foo' => 'first',
+//                        'bar' => 'second',
+//                        'crux' => 'third'
+//                    ]
+//                ],
+//                'second'
+//            ],
+//            [
+//                [
+//                    'on' => 'something',
+//                    'options' => [
+//                        'foo' => 'first',
+//                        'bar' => 'second',
+//                        'crux' => 'third'
+//                    ],
+//                    'default' => 'fourth'
+//                ],
+//                'fourth'
+//            ],
+//            [
+//                [
+//                    'on' => 'something',
+//                    'options' => [
+//                        'foo' => 'first',
+//                        'bar' => 'second',
+//                        'crux' => 'third'
+//                    ]
+//                ],
+//                null
+//            ],
             [
                 [
-                    'on' => 'foo',
+                    'on' => '30',
                     'options' => [
-                        'foo' => 'first',
-                        'bar' => 'second',
-                        'crux' => 'third'
-                    ]
+                        '30' => 'first',
+                        '40' => 'second',
+                        '50' => 'third'
+                    ],
+                    'default' => '60'
                 ],
                 'first'
-            ],
-            [
-                [
-                    'on' => 'bar',
-                    'options' => [
-                        'foo' => 'first',
-                        'bar' => 'second',
-                        'crux' => 'third'
-                    ]
-                ],
-                'second'
-            ],
-            [
-                [
-                    'on' => 'something',
-                    'options' => [
-                        'foo' => 'first',
-                        'bar' => 'second',
-                        'crux' => 'third'
-                    ],
-                    'default' => 'fourth'
-                ],
-                'fourth'
-            ],
-            [
-                [
-                    'on' => 'something',
-                    'options' => [
-                        'foo' => 'first',
-                        'bar' => 'second',
-                        'crux' => 'third'
-                    ]
-                ],
-                null
             ],
         ];
     }

@@ -13,6 +13,9 @@
   "message": {
     "<tpl>": "I want to go to {{ foo.city }}, {{ foo.country }}"
   },
+  "is_dutch_capital": {
+    "<eval>": "foo.city == 'Amsterdam' && foo.country == 'Netherlands'"
+  },
   "shipping": {
     "<switch>": "foo.country",
     "USA": "UPS",

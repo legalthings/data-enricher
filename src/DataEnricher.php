@@ -18,6 +18,7 @@ class DataEnricher
     public static $defaultProcessors = [
         '<ifset>' => Processor\IfSet::class,
         '<ref>' => Processor\Reference::class,
+        '<eval>' => Processor\Evaluate::class,
         '<switch>' => Processor\SwitchChoose::class,
         '<merge>' => Processor\Merge::class,
         '<tpl>' => Processor\Mustache::class,

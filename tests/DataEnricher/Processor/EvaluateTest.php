@@ -37,6 +37,14 @@ class EvaluateTest extends \PHPUnit_Framework_TestCase
                 true
             ],
             [
+                "foo.bar == 'test' || baz.zoo[0] == 'rest'",
+                (object)[
+                    'foo' => (object)['bar' => 'test'],
+                    'baz' => (object)['zoo' => [null]]
+                ],
+                true
+            ],
+            [
                 "foo.bar == null",
                 (object)['foo' => (object)['bar' => null]],
                 true
@@ -44,6 +52,14 @@ class EvaluateTest extends \PHPUnit_Framework_TestCase
             [
                 "foo.bar == 'tests'",
                 (object)['foo' => (object)['bar' => 'test']],
+                false
+            ],
+            [
+                "foo.bar == 'test' && baz.zoo[0] == 'rest'",
+                (object)[
+                    'foo' => (object)['bar' => 'test'],
+                    'baz' => (object)['zoo' => ['rests']]
+                ],
                 false
             ],
         ];

@@ -231,6 +231,7 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
             ],
             'amount' => 12345,
             'message' => 'I want to go to Amsterdam, Netherlands',
+            'is_dutch_capital' => true,
             'shipping' => 'PostNL',
             'profile' => (object) [
               'qux' => 12345,
@@ -270,6 +271,7 @@ class DataEnricherTest extends \PHPUnit_Framework_TestCase
             ],
             'amount' => 'foo-bar-cux',
             'message' => 'I want to go to foo-city, foo-country',
+            'is_dutch_capital' => false,
             'shipping' => null,
             'profile' => (object) [
               'qux' => 'foo-bar-cux',

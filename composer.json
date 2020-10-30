@@ -19,7 +19,7 @@
         "guzzlehttp/guzzle": "^6.0",
         "jasny/dotkey": "^1.0",
         "mustache/mustache": "^2.10",
-        "hoa/Math": "1.16.08.29"
+        "hoa/math": "1.16.08.29"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.0"
